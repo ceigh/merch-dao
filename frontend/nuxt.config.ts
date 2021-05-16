@@ -1,6 +1,15 @@
+require('dotenv').config({ path: '../.env' })
+
+const isDev = process.env.NODE_ENV === 'development'
+
+const prodPort = process.env.MD_FRONTEND_PROD_PORT
+if (!prodPort) { throw new Error('provide MD_FRONTEND_PROD_PORT') }
+
 export default {
   server: {
-    port: 4000
+    port: isDev
+      ? process.env.MD_FRONTEND_DEV_PORT ?? 4000
+      : prodPort
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

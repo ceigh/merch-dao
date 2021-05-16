@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
     "lint": "eslint --ignore-path ../.gitignore --max-warnings 0 --ext .ts,.js .",
     "test": "uvu --require ts-node/register",
     "dev": "ts-node-dev -r dotenv/config src/server",
-    "start": "ts-node -r dotenv/config src/server"
+    "start": "ts-node -r dotenv/config src/server",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.ts": "eslint"

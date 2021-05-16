@@ -7,8 +7,6 @@
     "frontend"
   ],
   "scripts": {
-    "backend:dev": "yarn workspace backend dev",
-    "frontend:dev": "yarn workspace frontend dev",
     "lint": "yarn workspaces run lint",
     "test": "yarn workspaces run test"
   },

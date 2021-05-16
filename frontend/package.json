@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
@@ -11,7 +10,8 @@
     "lint:es": "eslint --ext .vue,.ts,.js --ignore-path ../.gitignore .",
     "lint:style": "stylelint '**/*.{vue,css}' --ignore-path ../.gitignore",
     "lint": "yarn lint:es && yarn lint:style",
-    "test": "jest"
+    "test": "jest",
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.{vue,ts,js}": "eslint",

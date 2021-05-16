@@ -5,8 +5,8 @@
   "scripts": {
     "lint": "eslint --ignore-path ../.gitignore --max-warnings 0 --ext .ts,.js .",
     "test": "uvu --require ts-node/register",
-    "dev": "NODE_ENV=development ts-node-dev -r dotenv/config src/server dotenv_config_path=../.env",
-    "start": "ts-node -r dotenv/config src/server dotenv_config_path=../.env",
+    "dev": "make dev",
+    "start": "make start",
     "precommit": "lint-staged"
   },
   "lint-staged": {

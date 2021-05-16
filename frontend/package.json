@@ -7,9 +7,9 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "lint:es": "eslint --ext .vue,.ts,.js --ignore-path ../.gitignore .",
-    "lint:style": "stylelint '**/*.{vue,css}' --ignore-path ../.gitignore",
-    "lint": "yarn lint:es && yarn lint:style",
+    "lint-es": "make lint-es",
+    "lint-style": "make lint-style",
+    "lint": "make lint",
     "test": "jest",
     "precommit": "lint-staged"
   },

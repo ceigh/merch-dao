@@ -16,5 +16,5 @@ const port = Number(isDev
   : getFromEnv('BACKEND_PROD_PORT'))
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`)
+  if (isDev) console.log(`Listening on port ${port}...`)
 })

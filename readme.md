@@ -13,5 +13,5 @@ yarn workspace frontend dev
 
 # run in production mode
 yarn workspace backend start
-yarn workspace frontend start
+yarn workspace frontend build && yarn workspace frontend start
 ```

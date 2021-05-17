@@ -46,8 +46,8 @@ export default Vue.extend({
       return 'admin'
     },
     isAuthorized (): boolean {
-      return false
+      return this.$accessor.admin.isAuthorized
     }
   }
 })
-</script>>
+</script>

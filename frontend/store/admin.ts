@@ -1,7 +1,8 @@
 import { getterTree, mutationTree, actionTree } from 'typed-vuex'
 
 export const state = () => ({
-  secret: ''
+  secret: '',
+  username: ''
 })
 
 export const getters = getterTree(state, {

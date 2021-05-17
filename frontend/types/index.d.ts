@@ -4,6 +4,7 @@ type Accessor = typeof accessorType
 declare module 'vue/types/vue' {
   interface Vue {
     $accessor: Accessor
+    $bvToast: { toast: Function }
   }
 }
 declare module '@nuxt/types' {

@@ -18,7 +18,12 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     // https://github.com/bootstrap-vue/bootstrap-vue/issues/5627
-    babel: { compact: true }
+    babel: { compact: true },
+    transpile: [
+      ({ isLegacy }) => isLegacy && 'ohmyfetch',
+      ({ isLegacy }) => isLegacy && 'destr',
+      ({ isLegacy }) => isLegacy && 'ufo'
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -26,6 +31,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '@/plugins/api'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

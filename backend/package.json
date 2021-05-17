@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "create-db": "ts-node src/db/jobs/create-db",
     "lint": "eslint --ignore-path ../.gitignore --max-warnings 0 --ext .ts,.js .",
     "test": "uvu --require ts-node/register",
     "dev": "make dev",

@@ -1,7 +1,7 @@
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 
-import { getFromEnv } from '../helpers/env'
+import { getFromEnv } from '../../../helpers/env'
 
 import admin from './routes/admin'
 
@@ -17,10 +17,18 @@ app.use(bodyParser({
 // routes
 app.use(admin.routes())
 
-const port = Number(isDev
-  ? getFromEnv('BACKEND_DEV_PORT', '3000')
-  : getFromEnv('BACKEND_PROD_PORT'))
+// listen
+let host: string
+let port: number
 
-app.listen(port, () => {
-  if (isDev) console.log(`Listening on port ${port}...`)
+if (isDev) {
+  host = getFromEnv('BACKEND_DEV_HOST', 'localhost')
+  port = Number(getFromEnv('BACKEND_DEV_PORT', '3000'))
+} else {
+  host = getFromEnv('BACKEND_PROD_HOST')
+  port = Number(getFromEnv('BACKEND_PROD_PORT'))
+}
+
+app.listen(port, host, () => {
+  console.log(`Listening on ${host}:${port}`)
 })

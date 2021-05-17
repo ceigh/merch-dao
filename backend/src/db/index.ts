@@ -1,5 +1,5 @@
 import { Client, query } from 'faunadb'
-import { getFromEnv } from '../helpers/env'
+import { getFromEnv } from '../../../helpers/env'
 
 export function createClient (key?: string): Client {
   return new Client({

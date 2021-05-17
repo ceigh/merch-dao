@@ -45,7 +45,7 @@ export async function updatePassword (input: admin.UpdatePassword.I,
 
   const oldPasswordOk: boolean = await client.query(
     Identify(identity, input.oldPassword), { secret })
-  if (!oldPasswordOk) throw new Error('old password is wrong')
+  if (!oldPasswordOk) throw new Error('неверный старый пароль')
 
   await client.query(Update(identity,
     { credentials: { password: input.newPassword } }), { secret })

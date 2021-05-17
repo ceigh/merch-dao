@@ -9,7 +9,7 @@
     "lint-es": "make lint-es",
     "lint-style": "make lint-style",
     "lint": "make lint",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "precommit": "lint-staged"
   },
   "lint-staged": {

@@ -4,7 +4,7 @@
 
 1. Fill `.env` file, see `.env.example` file.
 
-2. Create Fauna database:
+2. Create [Fauna](https://dashboard.fauna.com/accounts/login) database:
 
    ```sh
    # install fauna cli

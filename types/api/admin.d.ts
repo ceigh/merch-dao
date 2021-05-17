@@ -17,7 +17,7 @@ export namespace SignIn {
 
 export namespace SignOut {
   export interface I {
-    allTokens: boolean
+    allTokens?: boolean
   }
 }
 

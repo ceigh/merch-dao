@@ -51,5 +51,6 @@ export async function updatePassword (input: admin.UpdatePassword.I,
     { credentials: { password: input.newPassword } }), { secret })
 
   const doSignOut = input.signOut ?? false
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (doSignOut) await signOut({ allTokens: true }, secret)
 }

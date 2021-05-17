@@ -13,6 +13,15 @@ export default async function (key: string): Promise<void> {
 
     privileges: [
       {
+        resource: Collection('admins'),
+        actions: {
+          create: true,
+          delete: true,
+          read: true,
+          write: true
+        }
+      },
+      {
         resource: Collection('items'),
         actions: {
           create: true,

@@ -34,3 +34,7 @@ yarn workspace frontend dev
 yarn workspace backend start
 yarn workspace frontend build && yarn workspace frontend start
 ```
+
+## API
+
+[Postman reference](https://www.getpostman.com/collections/b25d42feeff080e88e47)

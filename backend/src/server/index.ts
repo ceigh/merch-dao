@@ -1,6 +1,9 @@
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
+
 import { getFromEnv } from '../helpers/env'
+
+import admin from './routes/admin'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -10,6 +13,9 @@ const app = new Koa()
 app.use(bodyParser({
   onerror (err, ctx) { ctx.throw(400, err.message) }
 }))
+
+// routes
+app.use(admin.routes())
 
 const port = Number(isDev
   ? getFromEnv('BACKEND_DEV_PORT', '3000')

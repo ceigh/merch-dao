@@ -67,3 +67,19 @@ export function getNonBlankStringErr (value: unknown,
   if (value === '') return blank(key)
   return ''
 }
+
+export function getAuthHeaderErr (authHeader: string): string {
+  const name = 'authorization header'
+  if (authHeader === '') return `${name} is required`
+
+  const parts = authHeader.split(' ')
+  if (parts.length !== 2 || parts[0] !== 'Bearer') {
+    return mustBe('Bearer <secret>', name, authHeader)
+  }
+
+  const secret = parts[1]
+  if (secret === '') return blank(`secret in ${name}`)
+  const secretLenErr = getMinLenErr(32, `secret in ${name}`, secret)
+  if (secretLenErr !== '') return secretLenErr
+  return ''
+}

@@ -38,8 +38,8 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "ts-node": "^9.1.1",
     "lint-staged": "^11.0.0",
+    "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "uvu": "^0.5.1"
   }

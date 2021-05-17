@@ -1,20 +1,22 @@
 import { createClient, q } from '../..'
+import { addAdmin } from '../../api/admin'
 import type { values } from 'faunadb/src/types/values'
-import type { Admin } from '../../../../../types'
 
 type Ref = values.Ref
 export type Collections = Record<string, Ref>
 
-const { CreateCollection, Create, Collection } = q
+const { CreateCollection } = q
 
-const adminsCollection = 'admins'
+export const adminsCollection = 'admins'
+export const itemsCollection = 'items'
+export const ordersCollection = 'orders'
 
 export default async function (key: string): Promise<Collections> {
   const client = createClient(key)
   const collections = [
     { name: adminsCollection },
-    { name: 'items' },
-    { name: 'orders' }
+    { name: itemsCollection },
+    { name: ordersCollection }
   ]
 
   const entries = await Promise.all(collections.map(async c => {
@@ -23,12 +25,8 @@ export default async function (key: string): Promise<Collections> {
     return [c.name, ref]
   }))
 
-  // add predefined data
-  const admin: Admin = { username: 'admin' }
-
-  await client.query(
-    Create(Collection(adminsCollection),
-      { credentials: { password: 'admin' }, data: admin }))
+  // add default admin
+  await addAdmin({ username: 'admin', password: 'admin' }, key)
 
   return Object.fromEntries(entries)
 }

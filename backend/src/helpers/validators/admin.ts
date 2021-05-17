@@ -1,7 +1,7 @@
 import * as v from '.'
 import type { Data } from '../server'
 
-export async function getAddAdminErr (data: Data): Promise<string> {
+export function getAddAdminErr (data: Data): string {
   const usernameErr = v.getNonBlankStringErr(data.username, 'username')
   if (usernameErr !== '') return usernameErr
 

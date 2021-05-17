@@ -2,13 +2,9 @@ import { suite } from 'uvu'
 import { equal, ok } from 'uvu/assert'
 import {
   getStrictLenErr, getMinLenErr, getMaxLenErr, getTypeErr, getStringErr,
-  getObjectErr, getArrayErr, getBooleanErr, getNumberErr
+  getObjectErr, getArrayErr, getBooleanErr, getNumberErr, getNonBlankStringErr
 } from '../../src/helpers/validators'
-import {
-  wrongValuesWithUndefined, wrongValuesForObject,
-  wrongValuesForArray, wrongValuesForString, wrongValuesForBoolean,
-  wrongValuesForNumber
-} from '..'
+import * as _ from '..'
 
 const strictLenErr = suite('getStrictLenErr')
 
@@ -63,16 +59,6 @@ typeErr('is empty if type ok', () => {
   numbers.forEach(n => { equal(getTypeErr('number', '', n), '') })
 })
 
-typeErr('is not empty if type wrong', () => {
-  wrongValuesWithUndefined.forEach(w => {
-    const typeOfW = typeof w
-    const other = wrongValuesWithUndefined
-      // eslint-disable-next-line valid-typeof
-      .filter(ww => typeof ww !== typeOfW)
-    other.forEach(o => { ok(getTypeErr(typeOfW, '', o)) })
-  })
-})
-
 typeErr.run()
 
 const stringErr = suite('getStringErr')
@@ -84,8 +70,8 @@ stringErr('is empty if value is string', () => {
 })
 
 stringErr('is not empty if value is not string', () => {
-  wrongValuesForString.forEach(w => {
-    ok(getStringErr('', w))
+  _.wrongValuesForString.forEach(v => {
+    ok(getStringErr('', v))
   })
 })
 
@@ -99,8 +85,8 @@ booleanErr('is empty if value is boolean', () => {
 })
 
 booleanErr('is not empty if value is not boolean', () => {
-  wrongValuesForBoolean.forEach(w => {
-    ok(getBooleanErr('', w))
+  _.wrongValuesForBoolean.forEach(v => {
+    ok(getBooleanErr('', v))
   })
 })
 
@@ -115,8 +101,8 @@ numberErr('is empty if value is number', () => {
 })
 
 numberErr('is not empty if value is not number', () => {
-  wrongValuesForNumber.forEach(w => {
-    ok(getNumberErr('', w))
+  _.wrongValuesForNumber.forEach(v => {
+    ok(getNumberErr('', v))
   })
 })
 
@@ -129,7 +115,9 @@ objectErr('is empty if value is plain object', () => {
 })
 
 objectErr('is not empty if values is not plain object', () => {
-  wrongValuesForObject.forEach(w => { ok(getObjectErr('', w)) })
+  _.wrongValuesForObject.forEach(v => {
+    ok(getObjectErr('', v))
+  })
 })
 
 objectErr.run()
@@ -141,7 +129,23 @@ arrayErr('is empty if value is plain array', () => {
 })
 
 arrayErr('is not empty if value is not plain array', () => {
-  wrongValuesForArray.forEach(w => { ok(getArrayErr('', w)) })
+  _.wrongValuesForArray.forEach(v => {
+    ok(getArrayErr('', v))
+  })
 })
 
 arrayErr.run()
+
+const nonBlankStringErr = suite('nonBlankStringErr')
+
+nonBlankStringErr('is empty if value ok', () => {
+  equal(getNonBlankStringErr('a', ''), '')
+})
+
+nonBlankStringErr('is not empty if value wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getNonBlankStringErr(v, ''))
+  })
+})
+
+nonBlankStringErr.run()

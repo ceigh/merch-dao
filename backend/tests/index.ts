@@ -1,21 +1,24 @@
-export const wrongValues = ['', 'a', null, false, true, 0, 1, {}, []]
+export const username = 'admin'
+export const password = 'admin'
 
-export const wrongValuesWithUndefined = [...wrongValues, undefined]
+export function optional (wrongValues: any[]): any[] {
+  return wrongValues.filter(v => v !== undefined)
+}
 
-const _wrongValuesForObject = wrongValuesWithUndefined
-  .filter(w => typeof w !== 'object')
-export const wrongValuesForObject = [
-  ..._wrongValuesForObject, null, []
-]
+export const wrongValuesForNonBlankString =
+  ['', null, false, true, 0, 1, {}, [], undefined]
 
-export const wrongValuesForArray = wrongValuesWithUndefined
-  .filter(w => !Array.isArray(w))
+export const wrongValuesForObject =
+  ['', 'a', null, false, true, 0, 1, [], undefined]
 
-export const wrongValuesForString = wrongValuesWithUndefined
-  .filter(w => typeof w !== 'string')
+export const wrongValuesForArray =
+  ['', 'a', null, false, true, 0, 1, {}, undefined]
 
-export const wrongValuesForBoolean = wrongValuesWithUndefined
-  .filter(v => typeof v !== 'boolean')
+export const wrongValuesForString =
+  [null, false, true, 0, 1, {}, [], undefined]
 
-export const wrongValuesForNumber = wrongValuesWithUndefined
-  .filter(v => typeof v !== 'number')
+export const wrongValuesForBoolean =
+  ['', 'a', null, 0, 1, {}, [], undefined]
+
+export const wrongValuesForNumber =
+  ['', 'a', null, false, true, {}, [], undefined]

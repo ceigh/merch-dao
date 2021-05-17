@@ -1,28 +1,24 @@
-require('dotenv').config({ path: '../.env' })
+import { config as configDotenv } from 'dotenv'
+import { parseEnv } from './helpers/env'
+import type { NuxtConfig } from '@nuxt/types'
 
-const isDev = process.env.NODE_ENV === 'development'
+configDotenv({ path: '../.env' })
 
-const prodPort = process.env.MD_FRONTEND_PROD_PORT
-if (!prodPort) { throw new Error('provide MD_FRONTEND_PROD_PORT') }
+const { host, port, apiEndpoint } = parseEnv()
+const lang = 'ru'
 
 export default {
-  server: {
-    port: isDev
-      ? process.env.MD_FRONTEND_DEV_PORT ?? 4000
-      : prodPort
+  server: { host, port },
+
+  // $config
+  publicRuntimeConfig: {
+    apiEndpoint
   },
 
-  // Global page headers: https://go.nuxtjs.dev/config-head
-  head: {
-    title: 'frontend',
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
-    ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+  // Build Configuration: https://go.nuxtjs.dev/config-build
+  build: {
+    // https://github.com/bootstrap-vue/bootstrap-vue/issues/5627
+    babel: { compact: true }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -48,23 +44,17 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa'
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
-
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
+    meta: {
+      lang,
+      nativeUI: true
+    },
     manifest: {
-      lang: 'en'
+      lang
     }
-  },
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {
   }
-}
+} as NuxtConfig

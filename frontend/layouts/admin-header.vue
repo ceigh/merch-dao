@@ -27,6 +27,9 @@
             </template>
 
             <b-dropdown-group v-if="loggedIn">
+              <b-dropdown-item-button v-b-modal.add-admin-modal>
+                Добавить администратора
+              </b-dropdown-item-button>
               <b-dropdown-item-button v-b-modal.update-password-modal>
                 Сменить пароль
               </b-dropdown-item-button>
@@ -50,6 +53,43 @@
 
     <!-- modals -->
     <b-modal
+      id="add-admin-modal"
+      title="Новый администратор"
+      hide-footer
+    >
+      <b-form @submit.prevent="addAdmin">
+        <b-form-group
+          label="Логин"
+          label-for="add-admin-username"
+        >
+          <b-form-input
+            id="add-admin-username"
+            v-model="addAdminData.username"
+            placeholder="admin"
+            autofocus
+            required
+          />
+        </b-form-group>
+
+        <b-form-group
+          label="Пароль"
+          label-for="add-admin-password"
+        >
+          <b-form-input
+            id="add-admin-password"
+            v-model="addAdminData.password"
+            placeholder="password"
+            required
+          />
+        </b-form-group>
+
+        <b-button type="submit" variant="success">
+          Создать
+        </b-button>
+      </b-form>
+    </b-modal>
+
+    <b-modal
       id="update-password-modal"
       title="Смена пароля"
       hide-footer
@@ -57,10 +97,10 @@
       <b-form @submit.prevent="updatePassword">
         <b-form-group
           label="Старый пароль"
-          label-for="old-password"
+          label-for="update-password-old-password"
         >
           <b-form-input
-            id="old-password"
+            id="update-password-old-password"
             v-model="updatePasswordData.oldPassword"
             placeholder="old password"
             autofocus
@@ -70,10 +110,10 @@
 
         <b-form-group
           label="Новый пароль"
-          label-for="new-password"
+          label-for="update-password-new-password"
         >
           <b-form-input
-            id="new-password"
+            id="update-password-new-password"
             v-model="updatePasswordData.newPassword"
             placeholder="new password"
             required
@@ -110,6 +150,10 @@ import Vue from 'vue'
 export default Vue.extend({
   data () {
     return {
+      addAdminData: {
+        username: '',
+        password: ''
+      },
       updatePasswordData: {
         oldPassword: '',
         newPassword: '',
@@ -129,11 +173,22 @@ export default Vue.extend({
   },
 
   methods: {
+    async addAdmin (): Promise<void> {
+      try {
+        await this.$accessor.admin.add(this.addAdminData)
+
+        this.$bvModal.hide('add-admin-modal')
+        this.$toast('администратор добавлен', 'Успешно', 'success')
+      } catch (e) {
+        this.$toast(e.response?.data)
+      }
+    },
+
     async updatePassword (): Promise<void> {
       const { updatePasswordData } = this
 
       try {
-        await this.$accessor.auth.updatePassword(updatePasswordData)
+        await this.$accessor.auth_.updatePassword(updatePasswordData)
 
         const { signOut } = updatePasswordData
         if (signOut) { this.signOut() }

@@ -12,18 +12,15 @@ export default {
 
   // $config
   publicRuntimeConfig: {
-    apiEndpoint
+    axios: {
+      baseURL: apiEndpoint
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     // https://github.com/bootstrap-vue/bootstrap-vue/issues/5627
-    babel: { compact: true },
-    transpile: [
-      ({ isLegacy }) => isLegacy && 'ohmyfetch',
-      ({ isLegacy }) => isLegacy && 'destr',
-      ({ isLegacy }) => isLegacy && 'ufo'
-    ]
+    babel: { compact: true }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -31,7 +28,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/api'
+    '@/plugins/toast'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -51,7 +48,9 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -62,6 +61,39 @@ export default {
     },
     manifest: {
       lang
+    }
+  },
+
+  // https://auth.nuxtjs.org
+  auth: {
+    redirect: {
+      login: '/admin/sign-in',
+      logout: '/admin/sign-in',
+      home: '/admin/items'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: 'secret'
+        },
+        user: {
+          property: false // use response as value
+        },
+        endpoints: {
+          login: {
+            url: '/admin/sign-in',
+            method: 'post'
+          },
+          logout: {
+            url: '/admin/sign-out',
+            method: 'post'
+          },
+          user: {
+            url: '/admin',
+            method: 'get'
+          }
+        }
+      }
     }
   }
 } as NuxtConfig

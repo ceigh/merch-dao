@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" sticky type="dark" variant="dark" class="px-3">
+    <b-navbar toggleable="lg" sticky class="px-3">
       <b-navbar-brand to="/">
         MerchDAO
       </b-navbar-brand>
@@ -20,10 +20,10 @@
         <b-navbar-nav class="ml-auto">
           <b-nav-item-dropdown right>
             <template #button-content>
-              <span v-if="isAuthorized">{{ username }}</span>
+              <span v-if="loggedIn">{{ username }}</span>
               <span v-else>Аккаунт</span>
             </template>
-            <b-dropdown-item v-if="isAuthorized">
+            <b-dropdown-item v-if="loggedIn" @click="signOut">
               Выйти
             </b-dropdown-item>
             <b-dropdown-item v-else to="/admin/sign-in">
@@ -43,10 +43,20 @@ import Vue from 'vue'
 export default Vue.extend({
   computed: {
     username (): string {
-      return 'admin'
+      return this.$auth.user?.username as string ?? 'username'
     },
-    isAuthorized (): boolean {
-      return this.$accessor.admin.isAuthorized
+    loggedIn (): boolean {
+      return this.$auth.loggedIn
+    }
+  },
+
+  methods: {
+    async signOut (): Promise<void> {
+      try {
+        await this.$auth.logout()
+      } catch (e) {
+        this.$toast(e.response?.data)
+      }
     }
   }
 })

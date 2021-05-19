@@ -8,6 +8,6 @@ import Vue from 'vue'
 export default Vue.extend({
   layout: 'admin-header',
 
-  middleware: 'admin-auth'
+  middleware: 'auth'
 })
 </script>

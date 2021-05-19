@@ -7,7 +7,7 @@
       >
         <b-form-input
           id="username"
-          v-model="username"
+          v-model.trim="signInData.username"
           placeholder="admin"
           autofocus
           required
@@ -20,7 +20,7 @@
       >
         <b-form-input
           id="password"
-          v-model="password"
+          v-model="signInData.password"
           placeholder="password"
           required
         />
@@ -41,26 +41,19 @@ export default Vue.extend({
 
   data () {
     return {
-      username: '',
-      password: ''
+      signInData: {
+        username: '',
+        password: ''
+      }
     }
   },
 
   methods: {
     async signIn (): Promise<void> {
       try {
-        await this.$accessor.admin.signIn({
-          username: this.username,
-          password: this.password
-        })
-        this.$router.push('/admin/items')
+        await this.$auth.loginWith('local', { data: this.signInData })
       } catch (e) {
-        this.$bvToast.toast(e.message, {
-          title: 'Ошибка',
-          solid: true,
-          toaster: 'b-toaster-bottom-right',
-          variant: 'danger'
-        })
+        this.$toast(e.response?.data)
       }
     }
   }

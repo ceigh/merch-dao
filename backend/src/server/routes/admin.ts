@@ -30,4 +30,9 @@ router.patch('/password', createRoute({
   secure: true
 }))
 
+router.get('/', createRoute({
+  method: m.getAdmin,
+  secure: true
+}))
+
 export default router

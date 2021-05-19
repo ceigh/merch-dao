@@ -5,6 +5,7 @@ import { adminByUsernameIndex } from '../jobs/create-db/indexes'
 import type * as admin from '../../../../types/api/admin'
 import type { Admin } from '../../../../types'
 import type { values } from 'faunadb/src/types/values'
+import type { AdminDoc } from '../types'
 
 type Ref = values.Ref
 interface LoginRes { instance: Ref, secret: string }
@@ -12,7 +13,7 @@ interface LoginRes { instance: Ref, secret: string }
 const client = createClient()
 const {
   Create, Collection, Index, Login, Match,
-  Update, Logout, CurrentIdentity, Identify
+  Update, Logout, CurrentIdentity, Identify, Get
 } = q
 
 export async function addAdmin (input: admin.AddAdmin.I, secret: string):
@@ -53,4 +54,11 @@ export async function updatePassword (input: admin.UpdatePassword.I,
   const doSignOut = input.signOut ?? false
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (doSignOut) await signOut({ allTokens: true }, secret)
+}
+
+export async function getAdmin (_input: {}, secret: string):
+Promise<admin.GetAdmin.O> {
+  const { data }: AdminDoc = await client.query(
+    Get(CurrentIdentity()), { secret })
+  return data
 }

@@ -1,3 +1,5 @@
+import type { Admin} from '..'
+
 export namespace AddAdmin {
   export interface I {
     username: string
@@ -27,4 +29,8 @@ export namespace UpdatePassword {
     newPassword: string
     signOut?: boolean
   }
+}
+
+export namespace GetAdmin {
+  export interface O extends Admin {}
 }

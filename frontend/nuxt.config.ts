@@ -85,15 +85,15 @@ export default {
         },
         endpoints: {
           login: {
-            url: '/admin/sign-in',
+            url: '/auth/sign-in',
             method: 'post'
           },
           logout: {
-            url: '/admin/sign-out',
+            url: '/auth/sign-out',
             method: 'post'
           },
           user: {
-            url: '/admin',
+            url: '/user',
             method: 'get'
           }
         }

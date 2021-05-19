@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-navbar toggleable="lg" sticky class="px-3">
+    <b-navbar toggleable="md" sticky class="px-3">
       <b-navbar-brand to="/">
         MerchDAO
       </b-navbar-brand>
@@ -12,6 +12,7 @@
           <b-nav-item to="/admin/items">
             Товары
           </b-nav-item>
+
           <b-nav-item to="/admin/orders">
             Заказы
           </b-nav-item>
@@ -23,9 +24,11 @@
               <span v-if="loggedIn">{{ username }}</span>
               <span v-else>Аккаунт</span>
             </template>
-            <b-dropdown-item v-if="loggedIn" @click="signOut">
+
+            <b-dropdown-item-button v-if="loggedIn" v-b-modal.sign-out-modal>
               Выйти
-            </b-dropdown-item>
+            </b-dropdown-item-button>
+
             <b-dropdown-item v-else to="/admin/sign-in">
               Войти
             </b-dropdown-item>
@@ -37,6 +40,12 @@
     <b-container>
       <nuxt />
     </b-container>
+
+    <b-modal id="sign-out-modal" title="Выйти их аккаунта?" @ok="signOut">
+      <b-form-checkbox v-model="signOutAllTokens">
+        Сбросить все существующие сессии
+      </b-form-checkbox>
+    </b-modal>
   </div>
 </template>
 
@@ -44,6 +53,12 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  data () {
+    return {
+      signOutAllTokens: false
+    }
+  },
+
   computed: {
     username (): string {
       return this.$auth.user?.username as string ?? 'username'
@@ -55,8 +70,13 @@ export default Vue.extend({
 
   methods: {
     async signOut (): Promise<void> {
+      const { signOutAllTokens: allTokens } = this
+
       try {
-        await this.$auth.logout()
+        await this.$auth.logout({
+          // do not add if false
+          data: { ...(allTokens && { allTokens }) }
+        })
       } catch (e) {
         this.$toast(e.response?.data)
       }

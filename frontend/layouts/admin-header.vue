@@ -134,7 +134,7 @@
 
     <b-modal
       id="sign-out-modal"
-      title="Выйти их аккаунта?"
+      title="Выйти из аккаунта?"
       @ok="signOut"
     >
       <b-form-checkbox v-model="signOutAllTokens">

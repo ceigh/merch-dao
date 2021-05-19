@@ -9,6 +9,7 @@ declare module 'vue/types/vue' {
   interface Vue {
     $accessor: Accessor
     $api: Api
+    $bvModal: { show: Function, hide: Function }
     $bvToast: { toast: Function }
     $toast: typeof toast
   }

@@ -2,3 +2,13 @@ export interface User {
   username: string
   isAdmin: boolean
 }
+
+export interface Item {
+  id: string
+  name: string
+  description: string
+  images: string[]
+  // natural number, -1 for unlimited
+  quantity: number
+  isVisible: boolean
+}

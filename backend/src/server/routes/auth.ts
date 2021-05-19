@@ -7,7 +7,8 @@ const router = new Router({ prefix: '/auth' })
 
 router.post('/sign-in', createRoute({
   method: m.signIn,
-  validator: v.getSignInErr
+  validator: v.getSignInErr,
+  ok: 202
 }))
 
 router.post('/sign-out', createRoute({

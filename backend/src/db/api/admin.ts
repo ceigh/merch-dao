@@ -7,8 +7,7 @@ import type { User } from '../../../../types'
 const client = createClient()
 const { Create, Collection } = q
 
-export async function add (input: admin.Add.I, secret: string):
-Promise<void> {
+export async function add (input: admin.Add.I, secret: string): Promise<void> {
   const newAdmin: User = {
     username: input.username,
     isAdmin: true

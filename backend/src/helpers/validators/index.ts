@@ -1,3 +1,5 @@
+// TODO: translate
+
 export function getStrictLenErr (len: number, key: string,
   value: string): string {
   const valLen = value.length
@@ -21,8 +23,9 @@ ${len} chars length, not ${valLen}`
 }
 
 const mustBe = (expectedType: string, key: string,
-  realType: string): string =>
-  `${key} must be "${expectedType}", not "${realType}"`
+  realType = ''): string =>
+  `${key} must be "${expectedType}"${
+    realType !== '' ? `, not "${realType}"` : ''}`
 
 const blank = (key: string): string => `${key} cannot be blank`
 
@@ -43,6 +46,11 @@ export function getBooleanErr (key: string, value: unknown): string {
 
 export function getNumberErr (key: string, value: unknown): string {
   return getTypeErr('number', key, value)
+}
+
+export function getIntegerErr (key: string, value: unknown): string {
+  if (Number.isInteger(value)) return ''
+  return mustBe('integer', key)
 }
 
 // checks for plain object ({})

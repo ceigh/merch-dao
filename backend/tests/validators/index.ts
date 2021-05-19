@@ -2,7 +2,8 @@ import { suite } from 'uvu'
 import { equal, ok } from 'uvu/assert'
 import {
   getStrictLenErr, getMinLenErr, getMaxLenErr, getTypeErr, getStringErr,
-  getObjectErr, getArrayErr, getBooleanErr, getNumberErr, getNonBlankStringErr
+  getIntegerErr, getObjectErr, getArrayErr, getBooleanErr, getNumberErr,
+  getNonBlankStringErr
 } from '../../src/helpers/validators'
 import * as _ from '..'
 
@@ -107,6 +108,26 @@ numberErr('is not empty if value is not number', () => {
 })
 
 numberErr.run()
+
+const integerErr = suite('getIntegerErr')
+
+integerErr('is empty if value is integer', () => {
+  equal(getIntegerErr('', 0), '')
+  equal(getIntegerErr('', 9), '')
+  equal(getIntegerErr('', -9), '')
+})
+
+integerErr('is not empty if value is not integer', () => {
+  _.wrongValuesForNumber.forEach(v => {
+    ok(getIntegerErr('', v))
+  })
+  ok(getIntegerErr('', 9.9))
+  ok(getIntegerErr('', 0.9))
+  ok(getIntegerErr('', -0.9))
+  ok(getIntegerErr('', -9.9))
+})
+
+integerErr.run()
 
 const objectErr = suite('getObjectErr')
 

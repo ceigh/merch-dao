@@ -1,33 +1,31 @@
-// TODO: translate
-
 export function getStrictLenErr (len: number, key: string,
   value: string): string {
   const valLen = value.length
   if (valLen === len) return ''
-  return `${key} must be ${len} chars length, not ${valLen}`
+  return `${key} должно быть длиной ${len} символов (не ${valLen})`
 }
 
 export function getMinLenErr (len: number, key: string,
   value: string): string {
   const valLen = value.length
   if (valLen >= len) return ''
-  return `${key} must be at least ${len} chars length, not ${valLen}`
+  return `${key} должно быть длиной как минимум ${len} символов (не ${valLen})`
 }
 
 export function getMaxLenErr (len: number, key: string,
   value: string): string {
   const valLen = value.length
   if (valLen <= len) return ''
-  return `${key} must be less than or equal to \
-${len} chars length, not ${valLen}`
+  return `${key} должно быть меньше или равно \
+${len} символов в длину (не ${valLen})`
 }
 
 const mustBe = (expectedType: string, key: string,
   realType = ''): string =>
-  `${key} must be "${expectedType}"${
-    realType !== '' ? `, not "${realType}"` : ''}`
+  `${key} должно быть "${expectedType}"${
+    realType !== '' ? ` (не "${realType}")` : ''}`
 
-const blank = (key: string): string => `${key} cannot be blank`
+const blank = (key: string): string => `${key} не может быть пустым`
 
 export function getTypeErr (type: string, key: string,
   value: unknown): string {
@@ -77,8 +75,8 @@ export function getNonBlankStringErr (value: unknown,
 }
 
 export function getAuthHeaderErr (authHeader: string): string {
-  const name = 'authorization header'
-  if (authHeader === '') return `${name} is required`
+  const name = 'заголовок авторизации'
+  if (authHeader === '') return `${name} обязателен`
 
   const parts = authHeader.split(' ')
   if (parts.length !== 2 || parts[0] !== 'Bearer') {
@@ -86,8 +84,8 @@ export function getAuthHeaderErr (authHeader: string): string {
   }
 
   const secret = parts[1]
-  if (secret === '') return blank(`secret in ${name}`)
-  const secretLenErr = getMinLenErr(32, `secret in ${name}`, secret)
+  if (secret === '') return blank(`secret в ${name}`)
+  const secretLenErr = getMinLenErr(32, `secret в ${name}`, secret)
   if (secretLenErr !== '') return secretLenErr
   return ''
 }

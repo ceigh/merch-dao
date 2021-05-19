@@ -5,7 +5,7 @@ import { adminByUsernameIndex } from '../jobs/create-db/indexes'
 import type * as admin from '../../../../types/api/admin'
 import type { Admin } from '../../../../types'
 import type { values } from 'faunadb/src/types/values'
-import type { AdminDoc } from '../types'
+import type { AdminDoc } from '../../../types'
 
 type Ref = values.Ref
 interface LoginRes { instance: Ref, secret: string }

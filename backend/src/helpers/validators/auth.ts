@@ -15,8 +15,8 @@ export function getSignOutErr (data: Data): string {
 
 export function getUpdatePasswordErr (data: Data): string {
   const { oldPassword, newPassword } = data
-  const oldPasswordKey = 'old password'
-  const newPasswordKey = 'new password'
+  const oldPasswordKey = 'старый пароль'
+  const newPasswordKey = 'новый пароль'
 
   const oldPasswordErr = v
     .getNonBlankStringErr(oldPassword, oldPasswordKey)
@@ -27,7 +27,7 @@ export function getUpdatePasswordErr (data: Data): string {
   if (newPasswordErr !== '') return newPasswordErr
 
   if (oldPassword === newPassword) {
-    return `${oldPasswordKey} is equal to ${newPasswordKey}`
+    return 'одинаковые пароли'
   }
 
   const { signOut } = data

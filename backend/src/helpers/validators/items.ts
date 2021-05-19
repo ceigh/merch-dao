@@ -2,8 +2,11 @@ import * as v from '.'
 import { itemIdLen } from '../../../../helpers/const'
 import type { Data } from '../server'
 
-function getItemWithoutIdErr (key: string, value: Data, partial = false):
-string {
+export function getItemWithoutIdErr (key: string, value: Data,
+  partial = false): string {
+  const objectErr = v.getObjectErr(key, value)
+  if (objectErr !== '') return objectErr
+
   const { name, description, images, quantity, isVisible } = value
 
   if (!partial || (partial && name !== undefined)) {
@@ -23,7 +26,7 @@ string {
     const arrayErr = v.getArrayErr(imagesKey, images)
     if (arrayErr !== '') return arrayErr
 
-    for (const [i, image] of images) {
+    for (const [i, image] of images.entries()) {
       const nonBlankStringErr =
         v.getNonBlankStringErr(image, `${imagesKey}[${i as number}]`)
       if (nonBlankStringErr !== '') return nonBlankStringErr
@@ -49,7 +52,7 @@ string {
   return ''
 }
 
-function getIdErr (value: unknown, key = 'id'): string {
+export function getIdErr (value: unknown, key = 'id'): string {
   const nonBlankStringErr = v.getNonBlankStringErr(value, key)
   if (nonBlankStringErr !== '') return nonBlankStringErr
 
@@ -62,8 +65,11 @@ function getIdErr (value: unknown, key = 'id'): string {
 export function getAddErr (data: Data): string {
   const { items } = data
 
-  const arrayErr = v.getArrayErr('items', items)
+  const itemsKey = 'items'
+  const arrayErr = v.getArrayErr(itemsKey, items)
   if (arrayErr !== '') return arrayErr
+
+  if (items.length === 0) return `${itemsKey} не может быть пустым`
 
   for (const [i, item] of items.entries()) {
     const itemWithoutIdErr = getItemWithoutIdErr(`items[${i as number}]`, item)

@@ -5,6 +5,7 @@ import type { NuxtConfig } from '@nuxt/types'
 configDotenv({ path: '../.env' })
 
 const { host, port, apiEndpoint } = parseEnv()
+const name = 'MerchDAO'
 const lang = 'ru'
 
 export default {
@@ -56,10 +57,13 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     meta: {
+      name,
       lang,
       nativeUI: true
     },
     manifest: {
+      name,
+      short_name: name,
       lang
     }
   },

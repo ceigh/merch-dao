@@ -8,6 +8,10 @@ import Vue from 'vue'
 export default Vue.extend({
   layout: 'admin-header',
 
-  middleware: 'auth'
+  middleware: 'auth',
+
+  head: {
+    title: 'Товары'
+  }
 })
 </script>

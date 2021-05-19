@@ -1,36 +1,34 @@
 <template>
-  <div>
-    <b-form @submit.prevent="signIn">
-      <b-form-group
-        label="Username"
-        label-for="username"
-      >
-        <b-form-input
-          id="username"
-          v-model.trim="signInData.username"
-          placeholder="admin"
-          autofocus
-          required
-        />
-      </b-form-group>
+  <b-form @submit.prevent="signIn">
+    <b-form-group
+      label="Логин"
+      label-for="username"
+    >
+      <b-form-input
+        id="username"
+        v-model.trim="signInData.username"
+        placeholder="admin"
+        autofocus
+        required
+      />
+    </b-form-group>
 
-      <b-form-group
-        label="Пароль"
-        label-for="password"
-      >
-        <b-form-input
-          id="password"
-          v-model="signInData.password"
-          placeholder="password"
-          required
-        />
-      </b-form-group>
+    <b-form-group
+      label="Пароль"
+      label-for="password"
+    >
+      <b-form-input
+        id="password"
+        v-model="signInData.password"
+        placeholder="password"
+        required
+      />
+    </b-form-group>
 
-      <b-button type="submit" variant="primary">
-        Войти
-      </b-button>
-    </b-form>
-  </div>
+    <b-button type="submit" variant="primary">
+      Войти
+    </b-button>
+  </b-form>
 </template>
 
 <script lang="ts">
@@ -46,6 +44,10 @@ export default Vue.extend({
         password: ''
       }
     }
+  },
+
+  head: {
+    title: 'Вход'
   },
 
   methods: {

@@ -33,7 +33,10 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
-    <nuxt />
+
+    <b-container>
+      <nuxt />
+    </b-container>
   </div>
 </template>
 

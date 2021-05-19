@@ -1,4 +1,4 @@
 import type { values } from 'faunadb/src/types/values'
-import type { Admin } from '../../types'
+import type { User } from '../../types'
 
-export type AdminDoc = values.Document<Admin>
+export type UserDoc = values.Document<User>

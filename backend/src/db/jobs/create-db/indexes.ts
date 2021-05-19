@@ -4,7 +4,7 @@ import type { Client } from 'faunadb'
 
 const { CreateIndex } = q
 
-export const adminByUsernameIndex = 'admin_by_username'
+export const userByUsernameIndex = 'user_by_username'
 export const itemByIdIndex = 'item_by_id'
 export const orderByIdIndex = 'order_by_id'
 
@@ -26,7 +26,7 @@ export default async function (key: string,
   client = createClient(key)
   collectionsGlobal = collections
 
-  await create(adminByUsernameIndex)
+  await create(userByUsernameIndex)
   await create(itemByIdIndex)
   await create(orderByIdIndex)
 }

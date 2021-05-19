@@ -1,6 +1,6 @@
 import { createClient, q } from '../..'
 
-const { Collection, CreateRole } = q
+const { Collection, CreateRole, Query, Select, Get } = q
 
 export default async function (key: string): Promise<void> {
   const client = createClient(key)
@@ -8,12 +8,13 @@ export default async function (key: string): Promise<void> {
   await client.query(CreateRole({
     name: 'admin',
     membership: [{
-      resource: Collection('admins')
+      resource: Collection('users'),
+      predicate: Query(ref => Select(['data', 'isAdmin'], Get(ref)))
     }],
 
     privileges: [
       {
-        resource: Collection('admins'),
+        resource: Collection('users'),
         actions: {
           create: true,
           delete: true,
@@ -33,6 +34,7 @@ export default async function (key: string): Promise<void> {
       {
         resource: Collection('orders'),
         actions: {
+          create: true,
           delete: true,
           read: true,
           write: true

@@ -3,6 +3,8 @@ import bodyParser from 'koa-bodyparser'
 
 import { getFromEnv } from '../../../helpers/env'
 
+import auth from './routes/auth'
+import user from './routes/user'
 import admin from './routes/admin'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -15,6 +17,8 @@ app.use(bodyParser({
 }))
 
 // routes
+app.use(auth.routes())
+app.use(user.routes())
 app.use(admin.routes())
 
 // listen

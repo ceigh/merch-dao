@@ -1,6 +1,10 @@
 import { createClient, q } from '../..'
+import {
+  usersCollection, itemsCollection, ordersCollection
+} from './collections'
+import { itemByIdIndex, userByUsernameIndex, orderByIdIndex } from './indexes'
 
-const { Collection, CreateRole, Query, Select, Get } = q
+const { Collection, Index, CreateRole, Query, Select, Get } = q
 
 export default async function (key: string): Promise<void> {
   const client = createClient(key)
@@ -8,13 +12,13 @@ export default async function (key: string): Promise<void> {
   await client.query(CreateRole({
     name: 'admin',
     membership: [{
-      resource: Collection('users'),
+      resource: Collection(usersCollection),
       predicate: Query(ref => Select(['data', 'isAdmin'], Get(ref)))
     }],
 
     privileges: [
       {
-        resource: Collection('users'),
+        resource: Collection(usersCollection),
         actions: {
           create: true,
           delete: true,
@@ -23,7 +27,7 @@ export default async function (key: string): Promise<void> {
         }
       },
       {
-        resource: Collection('items'),
+        resource: Collection(itemsCollection),
         actions: {
           create: true,
           delete: true,
@@ -32,12 +36,31 @@ export default async function (key: string): Promise<void> {
         }
       },
       {
-        resource: Collection('orders'),
+        resource: Collection(ordersCollection),
         actions: {
           create: true,
           delete: true,
           read: true,
           write: true
+        }
+      },
+
+      {
+        resource: Index(itemByIdIndex),
+        actions: {
+          unrestricted_read: true
+        }
+      },
+      {
+        resource: Index(userByUsernameIndex),
+        actions: {
+          unrestricted_read: true
+        }
+      },
+      {
+        resource: Index(orderByIdIndex),
+        actions: {
+          unrestricted_read: true
         }
       }
     ]

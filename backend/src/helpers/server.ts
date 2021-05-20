@@ -1,12 +1,14 @@
 import { getAuthHeaderErr } from './validators'
 import type { Context } from 'koa'
 
+/*
 export class InternalError extends Error {
   constructor (message: string) {
     super(message)
     this.name = 'InternalError'
   }
 }
+*/
 
 type Request = Context['request']
 export type Data =
@@ -54,8 +56,9 @@ export function createRoute ({
       ctx.body = await method(...payload)
       ctx.status = ok
     } catch (err) {
-      if (err instanceof InternalError) ctx.throw(500, err)
-      else ctx.throw(400, err)
+      // if (err instanceof InternalError) ctx.throw(500, err)
+      // else ctx.throw(400, err)
+      ctx.throw(400, err)
     }
   }
 }

@@ -5,6 +5,15 @@ import * as v from '../../helpers/validators/items'
 
 const router = new Router({ prefix: '/items' })
 
+router.get('/', createRoute({
+  method: m.getVisible
+}))
+
+router.get('/all', createRoute({
+  method: m.get,
+  secure: true
+}))
+
 router.post('/add', createRoute({
   method: m.add,
   validator: v.getAddErr,
@@ -22,7 +31,6 @@ router.patch('/', createRoute({
 router.post('/delete', createRoute({
   method: m.deleteItem,
   validator: v.getDeleteErr,
-  ok: 202,
   secure: true
 }))
 

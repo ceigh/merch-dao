@@ -2,6 +2,12 @@ import type { Item } from '..'
 
 type ItemWithoutId = Omit<Item, 'id'>
 
+export namespace Get {
+  export interface O {
+    items: Item[]
+  }
+}
+
 export namespace Add {
   export interface I {
     items: ItemWithoutId[]

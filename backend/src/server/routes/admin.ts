@@ -12,4 +12,9 @@ router.post('/add', createRoute({
   secure: true
 }))
 
+router.get('/all', createRoute({
+  method: m.getAll,
+  secure: true
+}))
+
 export default router

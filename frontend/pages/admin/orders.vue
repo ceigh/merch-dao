@@ -11,7 +11,7 @@ export default Vue.extend({
   middleware: 'auth',
 
   head: {
-    title: 'Заказы'
+    title: 'Orders'
   }
 })
 </script>

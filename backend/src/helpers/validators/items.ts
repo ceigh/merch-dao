@@ -40,7 +40,7 @@ export function getItemWithoutIdErr (key: string, value: Data,
     if (integerErr !== '') return integerErr
 
     if (quantity < 0 && quantity !== -1) {
-      return `${quantityKey} должно быть в диапазоне [-1, Infinity]`
+      return `${quantityKey} must be in range [-1, Infinity)`
     }
   }
 
@@ -69,7 +69,7 @@ export function getAddErr (data: Data): string {
   const arrayErr = v.getArrayErr(itemsKey, items)
   if (arrayErr !== '') return arrayErr
 
-  if (items.length === 0) return `${itemsKey} не может быть пустым`
+  if (items.length === 0) return v.blank(itemsKey)
 
   for (const [i, item] of items.entries()) {
     const itemWithoutIdErr = getItemWithoutIdErr(`items[${i as number}]`, item)

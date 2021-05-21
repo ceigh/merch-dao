@@ -11,11 +11,11 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item to="/admin/items">
-            Товары
+            Items
           </b-nav-item>
 
           <b-nav-item to="/admin/orders">
-            Заказы
+            Orders
           </b-nav-item>
         </b-navbar-nav>
 
@@ -23,23 +23,23 @@
           <b-nav-item-dropdown right>
             <template #button-content>
               <span v-if="loggedIn">{{ username }}</span>
-              <span v-else>Аккаунт</span>
+              <span v-else>Account</span>
             </template>
 
             <b-dropdown-group v-if="loggedIn">
               <b-dropdown-item-button v-b-modal.add-admin-modal>
-                Добавить администратора
+                Add administrator
               </b-dropdown-item-button>
               <b-dropdown-item-button v-b-modal.update-password-modal>
-                Сменить пароль
+                Change password
               </b-dropdown-item-button>
               <b-dropdown-item-button v-b-modal.sign-out-modal>
-                Выйти
+                Sign out
               </b-dropdown-item-button>
             </b-dropdown-group>
 
             <b-dropdown-item v-else to="/admin/sign-in">
-              Войти
+              Sign in
             </b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -54,12 +54,12 @@
     <!-- modals -->
     <b-modal
       id="add-admin-modal"
-      title="Новый администратор"
+      title="New administrator"
       hide-footer
     >
       <b-form @submit.prevent="addAdmin">
         <b-form-group
-          label="Логин"
+          label="Username"
           label-for="add-admin-username"
         >
           <b-form-input
@@ -72,7 +72,7 @@
         </b-form-group>
 
         <b-form-group
-          label="Пароль"
+          label="Password"
           label-for="add-admin-password"
         >
           <b-form-input
@@ -84,19 +84,19 @@
         </b-form-group>
 
         <b-button type="submit" variant="success">
-          Создать
+          Create
         </b-button>
       </b-form>
     </b-modal>
 
     <b-modal
       id="update-password-modal"
-      title="Смена пароля"
+      title="Password change"
       hide-footer
     >
       <b-form @submit.prevent="updatePassword">
         <b-form-group
-          label="Старый пароль"
+          label="Old password"
           label-for="update-password-old-password"
         >
           <b-form-input
@@ -109,7 +109,7 @@
         </b-form-group>
 
         <b-form-group
-          label="Новый пароль"
+          label="New password"
           label-for="update-password-new-password"
         >
           <b-form-input
@@ -122,12 +122,12 @@
 
         <b-form-group>
           <b-form-checkbox v-model="updatePasswordData.signOut">
-            Завершить все сессии
+            Terminate all sessions
           </b-form-checkbox>
         </b-form-group>
 
         <b-button type="submit" variant="success">
-          Сохранить
+          Save
         </b-button>
       </b-form>
     </b-modal>
@@ -138,7 +138,7 @@
       @ok="signOut"
     >
       <b-form-checkbox v-model="signOutAllTokens">
-        Завершить все сессии
+        Terminate all sessions
       </b-form-checkbox>
     </b-modal>
   </div>
@@ -178,7 +178,7 @@ export default Vue.extend({
         await this.$accessor.admin.add(this.addAdminData)
 
         this.$bvModal.hide('add-admin-modal')
-        this.$toast('администратор добавлен', 'Успешно', 'success')
+        this.$toast('Administrator added', 'Success', 'success')
       } catch (e) {
         this.$toast(e.response?.data)
       }
@@ -194,7 +194,7 @@ export default Vue.extend({
         if (signOut) { this.signOut() }
 
         this.$bvModal.hide('update-password-modal')
-        this.$toast('пароль изменен', 'Успешно', 'success')
+        this.$toast('Password changed', 'Success', 'success')
 
         this.updatePasswordData.oldPassword = ''
         this.updatePasswordData.newPassword = ''

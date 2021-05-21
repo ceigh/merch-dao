@@ -15,6 +15,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree({ state, mutations }, {
   async add (_, data: Add.I): Promise<void> {
     await this.$axios.post('/admin/add', data)
+    await this.app.$accessor.admin.getAll()
   },
 
   async getAll (): Promise<void> {

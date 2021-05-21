@@ -10,16 +10,16 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item to="/admin/admins" exact-active-class="active">
-            Administrators
-          </b-nav-item>
-
           <b-nav-item to="/admin/items" exact-active-class="active">
             Items
           </b-nav-item>
 
           <b-nav-item to="/admin/orders" exact-active-class="active">
             Orders
+          </b-nav-item>
+
+          <b-nav-item to="/admin/admins" exact-active-class="active">
+            Administrators
           </b-nav-item>
         </b-navbar-nav>
 
@@ -150,6 +150,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import type { Add as AddAdmin } from '../../types/api/admin'
+import type { UpdatePassword } from '../../types/api/auth'
 
 export default Vue.extend({
   data () {
@@ -157,12 +159,12 @@ export default Vue.extend({
       addAdminData: {
         username: '',
         password: ''
-      },
+      } as AddAdmin.I,
       updatePasswordData: {
         oldPassword: '',
         newPassword: '',
         signOut: false
-      },
+      } as UpdatePassword.I,
       signOutAllTokens: false
     }
   },
@@ -178,17 +180,14 @@ export default Vue.extend({
 
   methods: {
     async addAdmin (): Promise<void> {
-      const { admin } = this.$accessor
       try {
-        await admin.add(this.addAdminData)
+        await this.$accessor.admin.add(this.addAdminData)
 
         this.$bvModal.hide('add-admin-modal')
         this.$toast('Administrator added', 'Success', 'success')
 
         this.addAdminData.username = ''
         this.addAdminData.password = ''
-
-        await admin.getAll()
       } catch (e) {
         this.$toast(e.response?.data)
       }

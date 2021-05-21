@@ -10,15 +10,15 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item to="/admin/admins">
+          <b-nav-item to="/admin/admins" exact-active-class="active">
             Administrators
           </b-nav-item>
 
-          <b-nav-item to="/admin/items">
+          <b-nav-item to="/admin/items" exact-active-class="active">
             Items
           </b-nav-item>
 
-          <b-nav-item to="/admin/orders">
+          <b-nav-item to="/admin/orders" exact-active-class="active">
             Orders
           </b-nav-item>
         </b-navbar-nav>
@@ -178,11 +178,17 @@ export default Vue.extend({
 
   methods: {
     async addAdmin (): Promise<void> {
+      const { admin } = this.$accessor
       try {
-        await this.$accessor.admin.add(this.addAdminData)
+        await admin.add(this.addAdminData)
 
         this.$bvModal.hide('add-admin-modal')
         this.$toast('Administrator added', 'Success', 'success')
+
+        this.addAdminData.username = ''
+        this.addAdminData.password = ''
+
+        await admin.getAll()
       } catch (e) {
         this.$toast(e.response?.data)
       }

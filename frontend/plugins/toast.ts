@@ -7,8 +7,8 @@ const upperCaseFirst = (str: string): string =>
 
 export function toast (
   this: Vue,
-  text = 'Неизвестная ошибка',
-  title = 'Ошибка',
+  text = 'Unknown error',
+  title = 'Error',
   variant: Variant = 'danger'
 ): void {
   this.$root.$bvToast.toast(upperCaseFirst(text), {

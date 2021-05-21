@@ -10,6 +10,10 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
+          <b-nav-item to="/admin/admins">
+            Administrators
+          </b-nav-item>
+
           <b-nav-item to="/admin/items">
             Items
           </b-nav-item>

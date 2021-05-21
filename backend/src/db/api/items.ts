@@ -2,21 +2,21 @@ import { nanoid } from 'nanoid'
 import { createClient, q } from '..'
 import { itemsCollection } from '../jobs/create-db/collections'
 import { itemByIdIndex } from '../jobs/create-db/indexes'
+import { getRefByIndex } from '../../helpers/db'
 import { itemIdLen } from '../../../../helpers/const'
 
-import type Expr from 'faunadb/src/types/Expr'
 import type { values } from 'faunadb/src/types/values'
 import type * as items from '../../../../types/api/items'
 import type { Item } from '../../../../types'
 
 const client = createClient()
 const {
-  Create, Collection, Update, Delete, Match, Index, Map, Paginate, Lambda,
-  Get, Documents, Select
+  Create, Collection, Update, Delete, Map, Paginate, Lambda, Get, Documents,
+  Select
 } = q
 
-const itemRefById = (id: Item['id']): Expr =>
-  Select(['ref'], Get(Match(Index(itemByIdIndex), id)))
+const itemRefById = (id: string): ReturnType<typeof getRefByIndex> =>
+  getRefByIndex(itemByIdIndex, id)
 
 export async function get (_input: {}, secret?: string): Promise<items.Get.O> {
   // pagination can be added in the future

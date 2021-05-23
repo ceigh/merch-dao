@@ -1,7 +1,12 @@
 <template>
   <div>
     <!-- header -->
-    <b-navbar toggleable="md" sticky class="px-3">
+    <b-navbar
+      toggleable="md"
+      sticky
+      class="px-3"
+      variant="light"
+    >
       <b-navbar-brand to="/">
         MerchDAO
       </b-navbar-brand>
@@ -48,7 +53,7 @@
     </b-navbar>
 
     <!-- content -->
-    <b-container>
+    <b-container class="py-5">
       <nuxt />
     </b-container>
 

@@ -23,7 +23,7 @@
         <p>{{ item.description }}</p>
 
         <p v-if="item.images.length" class="h-25">
-          <b-img
+          <b-img-lazy
             v-for="(img, i) in item.images"
             :key="i"
             :src="img"
@@ -43,9 +43,7 @@
               @click="showEditModal(item)"
             >
               Edit
-            </b-button>
-
-            <b-button
+            </b-button><b-button
               :disabled="currentItemId === item.id"
               variant="success"
               @click="makeItemCurrent(item.id)"

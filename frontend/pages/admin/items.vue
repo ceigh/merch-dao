@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-list-group>
-      <b-list-group-item button @click="showAddModal">
-        Add new item
+      <b-list-group-item button @click="showCreateModal">
+        Create new item
       </b-list-group-item>
 
       <b-list-group-item
@@ -103,11 +103,13 @@
           {{ candidateFormattedQuantity }}
         </b-form-group>
 
+        <!--
         <b-form-group>
           <b-form-checkbox v-model="candidate.isVisible">
             Set item as visible on homepage
           </b-form-checkbox>
         </b-form-group>
+          -->
 
         <b-button type="submit" variant="success">
           {{ modalSubmitText }}
@@ -136,8 +138,7 @@ const candidate: Omit<Item, 'id'> = {
   name: '',
   description: '',
   images: [],
-  quantity: -1,
-  isVisible: false
+  quantity: -1
 }
 
 export default Vue.extend({
@@ -147,7 +148,7 @@ export default Vue.extend({
 
   data () {
     return {
-      isAdd: true,
+      isCreate: true,
       candidate: { ...candidate },
       editionCandidateId: '',
       deletetionCandidate: {} as Item
@@ -174,13 +175,13 @@ export default Vue.extend({
       return this.getFormattedQuantity(this.candidate.quantity)
     },
     modalSubmitText (): string {
-      return this.isAdd ? 'Create' : 'Save'
+      return this.isCreate ? 'Create' : 'Save'
     },
     modalTitle (): string {
-      return this.isAdd ? 'New item' : 'Edit item'
+      return this.isCreate ? 'New item' : 'Edit item'
     },
     modalAction (): Function {
-      return this.isAdd ? this.addItem : this.editItem
+      return this.isCreate ? this.createItem : this.editItem
     }
   },
 
@@ -189,8 +190,8 @@ export default Vue.extend({
       return quantity === -1 ? 'Unlimited' : String(quantity)
     },
 
-    showAddModal (): void {
-      this.isAdd = true
+    showCreateModal (): void {
+      this.isCreate = true
       this.$bvModal.show('modal')
     },
     showEditModal (item: Item): void {
@@ -198,7 +199,7 @@ export default Vue.extend({
       this.candidate = itemRest
       this.candidate.images = [...itemRest.images]
       this.editionCandidateId = id
-      this.isAdd = false
+      this.isCreate = false
       this.$bvModal.show('modal')
     },
     showDeleteModal (item: Item): void {
@@ -206,13 +207,13 @@ export default Vue.extend({
       this.$bvModal.show('delete-modal')
     },
 
-    async addItem (): Promise<void> {
+    async createItem (): Promise<void> {
       try {
-        await this.$accessor.items.add({
-          items: [this.candidate]
+        await this.$accessor.items.create({
+          ...this.candidate
         })
         this.$bvModal.hide('modal')
-        this.$toast('item added', 'Success', 'success')
+        this.$toast('item created', 'Success', 'success')
         this.resetCandidate()
       } catch (e) {
         this.$toast(e.response?.data)
@@ -221,7 +222,7 @@ export default Vue.extend({
 
     async editItem (): Promise<void> {
       try {
-        await this.$accessor.items.edit({
+        await this.$accessor.items.update({
           id: this.editionCandidateId,
           item: this.candidate
         })

@@ -5,6 +5,6 @@ export const state = () => ({})
 
 export const actions = actionTree({ state }, {
   async deleteUser (_, data: Delete.I): Promise<void> {
-    await this.$axios.post('/user/delete', data)
+    await this.$axios.delete(`/user/${data.username}`)
   }
 })

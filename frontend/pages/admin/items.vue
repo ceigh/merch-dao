@@ -22,10 +22,24 @@
 
         <p>{{ item.description }}</p>
 
+        <p v-if="item.images.length" class="h-25">
+          <b-img
+            v-for="(img, i) in item.images"
+            :key="i"
+            :src="img"
+            alt="image"
+            width="32"
+            height="32"
+            class="image"
+            rounded
+          />
+        </p>
+
         <div class="d-flex w-100 justify-content-between">
           <div>
             <b-button
               variant="primary"
+              class="mr-2"
               @click="showEditModal(item)"
             >
               Edit
@@ -75,7 +89,7 @@
           label="Description"
           label-for="item-description"
         >
-          <b-form-input
+          <b-form-textarea
             id="item-description"
             v-model="candidate.description"
             placeholder="Coffee mug"
@@ -84,14 +98,24 @@
         </b-form-group>
 
         <b-form-group
-          label="Image"
-          label-for="item-image"
+          label="Images"
         >
-          <b-form-input
-            id="item-image"
-            v-model="candidate.images[0]"
-            placeholder="url"
-          />
+          <div class="d-flex gap-2">
+            <b-form-input
+              v-model="candidate.images[0]"
+              placeholder="url"
+              class="mr-2"
+            />
+            <b-form-input
+              v-model="candidate.images[1]"
+              placeholder="url"
+              class="mr-2"
+            />
+            <b-form-input
+              v-model="candidate.images[2]"
+              placeholder="url"
+            />
+          </div>
         </b-form-group>
 
         <b-form-group
@@ -103,7 +127,7 @@
             v-model.number="candidate.quantity"
             type="range"
             min="-1"
-            max="100"
+            max="500"
           />
           {{ candidateFormattedQuantity }}
         </b-form-group>
@@ -258,3 +282,9 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style scoped>
+.image:not(:last-of-type) {
+  margin-right: 0.5rem;
+}
+</style>

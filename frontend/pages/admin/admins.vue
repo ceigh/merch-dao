@@ -6,7 +6,15 @@
         :key="admin.username"
         class="d-flex justify-content-between align-items-center"
       >
-        {{ admin.username }}
+        <span>
+          {{ admin.username }}
+          <small
+            v-if="admin.username === currentAdminUsername"
+            class="text-muted"
+          >
+            (you)
+          </small>
+        </span>
 
         <b-button
           v-if="admin.username !== currentAdminUsername"

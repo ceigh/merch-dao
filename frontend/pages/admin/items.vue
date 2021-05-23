@@ -8,9 +8,23 @@
       <b-list-group-item
         v-for="item in items"
         :key="item.id"
-        class="d-flex justify-content-between align-items-center"
+        class="d-flex flex-column align-items-start"
       >
-        {{ item.name }}
+        <div class="d-flex w-100 justify-content-between">
+          <b-form-checkbox
+            :checked="item.isVisible"
+            disabled
+          >
+            <h5>
+              {{ item.name }}
+            </h5>
+          </b-form-checkbox>
+          <small>
+            {{ getFormattedQuantity(item.quantity) }}
+          </small>
+        </div>
+
+        <p>{{ item.description }}</p>
 
         <b-button
           variant="danger"
@@ -76,7 +90,7 @@
             min="-1"
             max="100"
           />
-          {{ additionCandidate.quantity === -1 ? 'Unlimited' : additionCandidate.quantity }}
+          {{ additionCandidateFormattedQuantity }}
         </b-form-group>
 
         <b-form-group>
@@ -141,10 +155,17 @@ export default Vue.extend({
   computed: {
     items (): Item[] {
       return this.$accessor.items.all
+    },
+    additionCandidateFormattedQuantity (): string {
+      return this.getFormattedQuantity(this.additionCandidate.quantity)
     }
   },
 
   methods: {
+    getFormattedQuantity (quantity: number): string {
+      return quantity === -1 ? 'Unlimited' : String(quantity)
+    },
+
     async addItem (): Promise<void> {
       try {
         await this.$accessor.items.add({

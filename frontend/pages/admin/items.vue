@@ -11,35 +11,35 @@
         class="d-flex flex-column align-items-start"
       >
         <div class="d-flex w-100 justify-content-between">
-          <b-form-checkbox
-            :checked="item.isVisible"
-            disabled
-          >
-            <h5 :title="item.isVisible ? 'Visible' : 'Not visible'">
-              {{ item.name }}
-            </h5>
-          </b-form-checkbox>
-          <small>
-            {{ getFormattedQuantity(item.quantity) }}
-          </small>
+          <h5>{{ item.name }}</h5>
+          <small>{{ getFormattedQuantity(item.quantity) }}</small>
         </div>
 
         <p>{{ item.description }}</p>
 
-        <div class="d-flex">
-          <b-button
-            class="mr-2"
-            variant="primary"
-            @click="showEditModal(item)"
-          >
-            Edit
-          </b-button>
+        <div class="d-flex w-100 justify-content-between">
+          <div>
+            <b-button
+              variant="primary"
+              @click="showEditModal(item)"
+            >
+              Edit
+            </b-button>
+
+            <b-button
+              variant="danger"
+              @click="showDeleteModal(item)"
+            >
+              Delete
+            </b-button>
+          </div>
 
           <b-button
-            variant="danger"
-            @click="showDeleteModal(item)"
+            variant="success"
+            :disabled="currentItemId === item.id"
+            @click="makeItemCurrent(item.id)"
           >
-            Delete
+            {{ currentItemId === item.id ? 'Current' : 'Make current' }}
           </b-button>
         </div>
       </b-list-group-item>
@@ -171,6 +171,9 @@ export default Vue.extend({
     items (): Item[] {
       return this.$accessor.items.all
     },
+    currentItemId (): string {
+      return this.$accessor.options.currentItem
+    },
     candidateFormattedQuantity (): string {
       return this.getFormattedQuantity(this.candidate.quantity)
     },
@@ -244,6 +247,15 @@ export default Vue.extend({
         this.$toast(e.response?.data)
       }
       this.deletetionCandidate = {} as Item
+    },
+
+    async makeItemCurrent (id: Item['id']): Promise<void> {
+      try {
+        await this.$accessor.items.updateCurrent(id)
+        this.$toast('current item is set', 'Success', 'success')
+      } catch (e) {
+        this.$toast(e.response?.data)
+      }
     },
 
     resetCandidate (): void {

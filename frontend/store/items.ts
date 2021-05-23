@@ -1,5 +1,5 @@
 import { mutationTree, actionTree } from 'typed-vuex'
-import type { Item } from '../../types'
+import type { Options, Item } from '../../types'
 import type { Create, Update, Delete } from '../../types/api/items'
 
 export const state = () => ({
@@ -33,5 +33,13 @@ export const actions = actionTree({ state, mutations }, {
   async getAll (): Promise<void> {
     const { data: { items } } = await this.$axios.get('/items')
     this.app.$accessor.items.setAll(items)
+  },
+
+  async updateCurrent (_, id: Options['currentItem']): Promise<void> {
+    const { $accessor } = this.app
+    await $accessor.updateOptions({
+      scope: $accessor.options.scope,
+      options: { currentItem: id }
+    })
   }
 })

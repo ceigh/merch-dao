@@ -108,11 +108,7 @@ export default Vue.extend({
   },
 
   async fetch ({ app: { $accessor } }) {
-    try {
-      await $accessor.admin.getAll()
-    } catch (e) {
-      this.$toast(e.response?.data)
-    }
+    await $accessor.admin.getAll()
   },
 
   head: {

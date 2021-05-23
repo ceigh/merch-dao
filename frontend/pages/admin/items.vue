@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-list-group>
-      <b-list-group-item v-b-modal.add-modal button>
+      <b-list-group-item button @click="showAddModal">
         Add new item
       </b-list-group-item>
 
@@ -26,30 +26,40 @@
 
         <p>{{ item.description }}</p>
 
-        <b-button
-          variant="danger"
-          @click="showDeleteModal(item)"
-        >
-          Delete
-        </b-button>
+        <div class="d-flex">
+          <b-button
+            class="mr-2"
+            variant="primary"
+            @click="showEditModal(item)"
+          >
+            Edit
+          </b-button>
+
+          <b-button
+            variant="danger"
+            @click="showDeleteModal(item)"
+          >
+            Delete
+          </b-button>
+        </div>
       </b-list-group-item>
     </b-list-group>
 
     <!-- modals -->
     <b-modal
-      id="add-modal"
-      title="New item"
+      id="modal"
+      :title="modalTitle"
       hide-footer
-      @ok="addItem"
+      @hide="resetCandidate"
     >
-      <b-form @submit.prevent="addItem">
+      <b-form @submit.prevent="modalAction">
         <b-form-group
           label="Name"
-          label-for="add-item-name"
+          label-for="item-name"
         >
           <b-form-input
-            id="add-item-name"
-            v-model="additionCandidate.name"
+            id="item-name"
+            v-model="candidate.name"
             placeholder="Mug"
             autofocus
             required
@@ -58,11 +68,11 @@
 
         <b-form-group
           label="Description"
-          label-for="add-item-description"
+          label-for="item-description"
         >
           <b-form-input
-            id="add-item-description"
-            v-model="additionCandidate.description"
+            id="item-description"
+            v-model="candidate.description"
             placeholder="Coffee mug"
             required
           />
@@ -70,37 +80,37 @@
 
         <b-form-group
           label="Image"
-          label-for="add-item-image"
+          label-for="item-image"
         >
           <b-form-input
-            id="add-item-image"
-            v-model="additionCandidate.images[0]"
+            id="item-image"
+            v-model="candidate.images[0]"
             placeholder="url"
           />
         </b-form-group>
 
         <b-form-group
           label="Quantity"
-          label-for="add-item-quantity"
+          label-for="item-quantity"
         >
           <b-form-input
-            id="add-item-quantity"
-            v-model.number="additionCandidate.quantity"
+            id="item-quantity"
+            v-model.number="candidate.quantity"
             type="range"
             min="-1"
             max="100"
           />
-          {{ additionCandidateFormattedQuantity }}
+          {{ candidateFormattedQuantity }}
         </b-form-group>
 
         <b-form-group>
-          <b-form-checkbox v-model="additionCandidate.isVisible">
+          <b-form-checkbox v-model="candidate.isVisible">
             Set item as visible on homepage
           </b-form-checkbox>
         </b-form-group>
 
         <b-button type="submit" variant="success">
-          Create
+          {{ modalSubmitText }}
         </b-button>
       </b-form>
     </b-modal>
@@ -122,6 +132,14 @@
 import Vue from 'vue'
 import type { Item } from '../../../types'
 
+const candidate: Omit<Item, 'id'> = {
+  name: '',
+  description: '',
+  images: [],
+  quantity: -1,
+  isVisible: false
+}
+
 export default Vue.extend({
   layout: 'admin-header',
 
@@ -129,13 +147,9 @@ export default Vue.extend({
 
   data () {
     return {
-      additionCandidate: {
-        name: '',
-        description: '',
-        images: [],
-        quantity: -1,
-        isVisible: false
-      } as Omit<Item, 'id'>,
+      isAdd: true,
+      candidate: { ...candidate },
+      editionCandidateId: '',
       deletetionCandidate: {} as Item
     }
   },
@@ -156,8 +170,17 @@ export default Vue.extend({
     items (): Item[] {
       return this.$accessor.items.all
     },
-    additionCandidateFormattedQuantity (): string {
-      return this.getFormattedQuantity(this.additionCandidate.quantity)
+    candidateFormattedQuantity (): string {
+      return this.getFormattedQuantity(this.candidate.quantity)
+    },
+    modalSubmitText (): string {
+      return this.isAdd ? 'Create' : 'Save'
+    },
+    modalTitle (): string {
+      return this.isAdd ? 'New item' : 'Edit item'
+    },
+    modalAction (): Function {
+      return this.isAdd ? this.addItem : this.editItem
     }
   },
 
@@ -166,26 +189,48 @@ export default Vue.extend({
       return quantity === -1 ? 'Unlimited' : String(quantity)
     },
 
+    showAddModal (): void {
+      this.isAdd = true
+      this.$bvModal.show('modal')
+    },
+    showEditModal (item: Item): void {
+      const { id, ...itemRest } = item
+      this.candidate = itemRest
+      this.candidate.images = [...itemRest.images]
+      this.editionCandidateId = id
+      this.isAdd = false
+      this.$bvModal.show('modal')
+    },
+    showDeleteModal (item: Item): void {
+      this.deletetionCandidate = item
+      this.$bvModal.show('delete-modal')
+    },
+
     async addItem (): Promise<void> {
       try {
         await this.$accessor.items.add({
-          items: [this.additionCandidate]
+          items: [this.candidate]
         })
-        this.$bvModal.hide('add-modal')
-        this.$toast('Item added', 'Success', 'success')
-
-        this.additionCandidate.name = ''
-        this.additionCandidate.description = ''
-        this.additionCandidate.quantity = -1
-        this.additionCandidate.isVisible = false
+        this.$bvModal.hide('modal')
+        this.$toast('item added', 'Success', 'success')
+        this.resetCandidate()
       } catch (e) {
         this.$toast(e.response?.data)
       }
     },
 
-    showDeleteModal (item: Item): void {
-      this.deletetionCandidate = item
-      this.$bvModal.show('delete-modal')
+    async editItem (): Promise<void> {
+      try {
+        await this.$accessor.items.edit({
+          id: this.editionCandidateId,
+          item: this.candidate
+        })
+        this.$bvModal.hide('modal')
+        this.$toast('item edited', 'Success', 'success')
+        this.resetCandidate()
+      } catch (e) {
+        this.$toast(e.response?.data)
+      }
     },
 
     async deleteItem (): Promise<void> {
@@ -198,6 +243,11 @@ export default Vue.extend({
         this.$toast(e.response?.data)
       }
       this.deletetionCandidate = {} as Item
+    },
+
+    resetCandidate (): void {
+      this.candidate = { ...candidate }
+      this.candidate.images = []
     }
   }
 })

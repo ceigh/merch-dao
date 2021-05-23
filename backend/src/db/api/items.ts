@@ -8,6 +8,7 @@ import { itemIdLen } from '../../../../helpers/const'
 import type { values } from 'faunadb/src/types/values'
 import type * as items from '../../../../types/api/items'
 import type { Item } from '../../../../types'
+import type { ItemDoc } from '../../../types'
 
 const client = createClient()
 const {
@@ -18,7 +19,8 @@ const {
 const itemRefById = (id: string): ReturnType<typeof getRefByIndex> =>
   getRefByIndex(itemByIdIndex, id)
 
-export async function get (_input: {}, secret?: string): Promise<items.Get.O> {
+export async function getAll (_input: {}, secret?: string):
+Promise<items.GetAll.O> {
   // pagination can be added in the future
   const { data: items }: values.Page<Item> =
     await client.query(Map(
@@ -28,26 +30,21 @@ export async function get (_input: {}, secret?: string): Promise<items.Get.O> {
   return { items }
 }
 
-export async function getVisible (): Promise<items.Get.O> {
-  const { items } = await get({})
-  const visibleItems = items.filter(i => i.isVisible)
-  return { items: visibleItems }
+export async function get (input: items.Get.I): Promise<items.Get.O> {
+  const { data }: ItemDoc = await client.query(Get(itemRefById(input.id)))
+  return data
 }
 
 export async function add (input: items.Add.I, secret: string): Promise<void> {
-  const newItems: Item[] = input.items.map(i => ({
-    ...i,
+  const newItem: Item = {
+    ...input,
     id: nanoid(itemIdLen)
-  }))
-
-  // FIXME: bulk insert
-  for (const i of newItems) {
-    await client.query(Create(Collection(itemsCollection), { data: i }),
-      { secret })
   }
+  await client.query(Create(Collection(itemsCollection), { data: newItem }),
+    { secret })
 }
 
-export async function edit (input: items.Edit.I, secret: string):
+export async function update (input: items.Update.I, secret: string):
 Promise<void> {
   await client.query(Update(itemRefById(input.id), { data: input.item }),
     { secret })

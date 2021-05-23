@@ -6,7 +6,7 @@ import { getFromEnv } from '../../../helpers/env'
 import auth from './routes/auth'
 import user from './routes/user'
 import admin from './routes/admin'
-import items from './routes/items'
+import { item, items } from './routes/items'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -21,6 +21,7 @@ app.use(bodyParser({
 app.use(auth.routes())
 app.use(user.routes())
 app.use(admin.routes())
+app.use(item.routes())
 app.use(items.routes())
 
 // listen

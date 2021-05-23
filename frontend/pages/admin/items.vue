@@ -15,7 +15,7 @@
             :checked="item.isVisible"
             disabled
           >
-            <h5>
+            <h5 :title="item.isVisible ? 'Visible' : 'Not visible'">
               {{ item.name }}
             </h5>
           </b-form-checkbox>

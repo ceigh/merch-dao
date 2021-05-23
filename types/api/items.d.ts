@@ -2,19 +2,24 @@ import type { Item } from '..'
 
 type ItemWithoutId = Omit<Item, 'id'>
 
-export namespace Get {
+export namespace GetAll {
   export interface O {
     items: Item[]
   }
 }
 
-export namespace Add {
+export namespace Get {
   export interface I {
-    items: ItemWithoutId[]
+    id: Item['id']
   }
+  export interface O extends Item {}
 }
 
-export namespace Edit {
+export namespace Add {
+  export interface I extends ItemWithoutId {}
+}
+
+export namespace Update {
   export interface I {
     id: Item['id']
     item: Partial<ItemWithoutId>

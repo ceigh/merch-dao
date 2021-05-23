@@ -4,24 +4,26 @@ import type { Data } from '../server'
 
 export function getItemWithoutIdErr (key: string, value: Data,
   partial = false): string {
-  const objectErr = v.getObjectErr(key, value)
+  const k = key !== '' ? `${key}.` : ''
+
+  const objectErr = v.getObjectErr(k, value)
   if (objectErr !== '') return objectErr
 
-  const { name, description, images, quantity, isVisible } = value
+  const { name, description, images, quantity } = value
 
   if (!partial || (partial && name !== undefined)) {
-    const nonBlankStringErr = v.getNonBlankStringErr(name, `${key}.name`)
+    const nonBlankStringErr = v.getNonBlankStringErr(name, `${k}name`)
     if (nonBlankStringErr !== '') return nonBlankStringErr
   }
 
   if (!partial || (partial && description !== undefined)) {
     const nonBlankStringErr =
-      v.getNonBlankStringErr(description, `${key}.description`)
+      v.getNonBlankStringErr(description, `${k}description`)
     if (nonBlankStringErr !== '') return nonBlankStringErr
   }
 
   if (!partial || (partial && images !== undefined)) {
-    const imagesKey = `${key}.images`
+    const imagesKey = `${k}images`
 
     const arrayErr = v.getArrayErr(imagesKey, images)
     if (arrayErr !== '') return arrayErr
@@ -34,7 +36,7 @@ export function getItemWithoutIdErr (key: string, value: Data,
   }
 
   if (!partial || (partial && quantity !== undefined)) {
-    const quantityKey = `${key}.quantity`
+    const quantityKey = `${k}quantity`
 
     const integerErr = v.getIntegerErr(quantityKey, quantity)
     if (integerErr !== '') return integerErr
@@ -42,11 +44,6 @@ export function getItemWithoutIdErr (key: string, value: Data,
     if (quantity < 0 && quantity !== -1) {
       return `${quantityKey} must be in range [-1, Infinity)`
     }
-  }
-
-  if (!partial || (partial && isVisible !== undefined)) {
-    const booleanErr = v.getBooleanErr(`${key}.isVisible`, isVisible)
-    if (booleanErr !== '') return booleanErr
   }
 
   return ''
@@ -63,23 +60,13 @@ export function getIdErr (value: unknown, key = 'id'): string {
 }
 
 export function getAddErr (data: Data): string {
-  const { items } = data
-
-  const itemsKey = 'items'
-  const arrayErr = v.getArrayErr(itemsKey, items)
-  if (arrayErr !== '') return arrayErr
-
-  if (items.length === 0) return v.blank(itemsKey)
-
-  for (const [i, item] of items.entries()) {
-    const itemWithoutIdErr = getItemWithoutIdErr(`items[${i as number}]`, item)
-    if (itemWithoutIdErr !== '') return itemWithoutIdErr
-  }
+  const itemWithoutIdErr = getItemWithoutIdErr('', data)
+  if (itemWithoutIdErr !== '') return itemWithoutIdErr
 
   return ''
 }
 
-export function getEditErr (data: Data): string {
+export function getUpdateErr (data: Data): string {
   const idErr = getIdErr(data.id)
   if (idErr !== '') return idErr
 
@@ -95,3 +82,5 @@ export function getDeleteErr (data: Data): string {
 
   return ''
 }
+
+export const getGetErr = getDeleteErr

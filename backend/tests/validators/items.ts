@@ -2,7 +2,8 @@ import { suite } from 'uvu'
 import { equal, ok } from 'uvu/assert'
 import { itemIdLen } from '../../../helpers/const'
 import {
-  getItemWithoutIdErr, getIdErr, getAddErr, getEditErr, getDeleteErr
+  getItemWithoutIdErr, getIdErr, getAddErr, getUpdateErr, getDeleteErr,
+  getGetErr
 } from '../../src/helpers/validators/items'
 import * as _ from '..'
 import type { Item } from '../../../types'
@@ -11,8 +12,7 @@ const item: Omit<Item, 'id'> = {
   name: 'a'.repeat(9),
   description: 'a'.repeat(99),
   images: ['a'.repeat(9)],
-  quantity: 9,
-  isVisible: true
+  quantity: 9
 }
 const id = 'a'.repeat(itemIdLen)
 
@@ -52,12 +52,6 @@ itemWithoutIdErr('is not empty if quantity is wrong', () => {
   ok(getItemWithoutIdErr('', { ...item, quantity: -9 }))
 })
 
-itemWithoutIdErr('is not empty if isVisible is wrong', () => {
-  _.wrongValuesForBoolean.forEach(v => {
-    ok(getItemWithoutIdErr('', { ...item, isVisible: v }))
-  })
-})
-
 itemWithoutIdErr.run()
 
 const idErr = suite('getIdErr')
@@ -92,112 +86,109 @@ deleteErr('is not empty if id is wrong', () => {
 
 deleteErr.run()
 
-const addErr = suite('getAddErr')
+const getErr = suite('getGetErr')
 
-addErr('is empty if items ok', () => {
-  equal(getAddErr({ items: [item] }), '')
+getErr('is empty if id ok', () => {
+  equal(getGetErr({ id }), '')
 })
 
-addErr('is not empty if items wrong', () => {
-  _.wrongValuesForArray.forEach(v => {
-    ok(getAddErr({ items: v }))
+getErr('is not empty if id is wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getGetErr({ id: v }))
   })
-  ok(getAddErr({ items: [] }))
+  ok(getGetErr({ id: 'a'.repeat(itemIdLen - 1) }))
+  ok(getGetErr({ id: 'a'.repeat(itemIdLen + 1) }))
+})
+
+getErr.run()
+
+const addErr = suite('getAddErr')
+
+addErr('is empty if item ok', () => {
+  equal(getAddErr(item), '')
 })
 
 addErr('is not empty if item name wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ items: [{ ...item, name: v }] }))
+    ok(getAddErr({ ...item, name: v }))
   })
 })
 
 addErr('is not empty if item description wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ items: [{ ...item, description: v }] }))
+    ok(getAddErr({ ...item, description: v }))
   })
 })
 
 addErr('is not empty if item images wrong', () => {
   _.wrongValuesForArray.forEach(v => {
-    ok(getAddErr({ items: [{ ...item, images: v }] }))
+    ok(getAddErr({ ...item, images: v }))
   })
 
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ items: [{ ...item, images: [v] }] }))
+    ok(getAddErr({ ...item, images: [v] }))
   })
 })
 
 addErr('is not empty if item quantity is wrong', () => {
   _.wrongValuesForNumber.forEach(v => {
-    ok(getAddErr({ items: [{ ...item, quantity: v }] }))
+    ok(getAddErr({ ...item, quantity: v }))
   })
-  ok(getAddErr({ items: [{ ...item, quantity: 0.9 }] }))
-  ok(getAddErr({ items: [{ ...item, quantity: -9 }] }))
-})
-
-addErr('is not empty if item isVisible is wrong', () => {
-  _.wrongValuesForBoolean.forEach(v => {
-    ok(getAddErr({ items: [{ ...item, isVisible: v }] }))
-  })
+  ok(getAddErr({ ...item, quantity: 0.9 }))
+  ok(getAddErr({ ...item, quantity: -9 }))
 })
 
 addErr.run()
 
-const editErr = suite('getEditErr')
+const updateErr = suite('getUpdateErr')
 
-editErr('is empty if payload ok', () => {
-  equal(getEditErr({ item, id }), '')
-  equal(getEditErr({ item: {}, id }), '')
+updateErr('is empty if payload ok', () => {
+  equal(getUpdateErr({ item, id }), '')
+  equal(getUpdateErr({ item: {}, id }), '')
 })
 
-editErr('is not empty if id is wrong', () => {
+updateErr('is not empty if id is wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getEditErr({ item, id: v }))
+    ok(getUpdateErr({ item, id: v }))
   })
-  ok(getEditErr({ item, id: 'a'.repeat(itemIdLen - 1) }))
-  ok(getEditErr({ item, id: 'a'.repeat(itemIdLen + 1) }))
+  ok(getUpdateErr({ item, id: 'a'.repeat(itemIdLen - 1) }))
+  ok(getUpdateErr({ item, id: 'a'.repeat(itemIdLen + 1) }))
 })
 
-editErr('is not empty if item wrong', () => {
+updateErr('is not empty if item wrong', () => {
   _.wrongValuesForObject.forEach(v => {
-    ok(getEditErr({ id, item: v }))
+    ok(getUpdateErr({ id, item: v }))
   })
 })
 
-editErr('is not empty if item name wrong', () => {
+updateErr('is not empty if item name wrong', () => {
   _.optional(_.wrongValuesForNonBlankString).forEach(v => {
-    ok(getEditErr({ id, item: { ...item, name: v } }))
+    ok(getUpdateErr({ id, item: { ...item, name: v } }))
   })
 })
 
-editErr('is not empty if item description wrong', () => {
+updateErr('is not empty if item description wrong', () => {
   _.optional(_.wrongValuesForNonBlankString).forEach(v => {
-    ok(getEditErr({ id, item: { ...item, description: v } }))
+    ok(getUpdateErr({ id, item: { ...item, description: v } }))
   })
 })
 
-editErr('is not empty if item images wrong', () => {
+updateErr('is not empty if item images wrong', () => {
   _.optional(_.wrongValuesForArray).forEach(v => {
-    ok(getEditErr({ id, item: { ...item, images: v } }))
+    ok(getUpdateErr({ id, item: { ...item, images: v } }))
   })
 
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getEditErr({ id, items: { ...item, images: [v] } }))
+    ok(getUpdateErr({ id, items: { ...item, images: [v] } }))
   })
 })
 
-editErr('is not empty if item quantity is wrong', () => {
+updateErr('is not empty if item quantity is wrong', () => {
   _.optional(_.wrongValuesForNumber).forEach(v => {
-    ok(getEditErr({ id, item: { ...item, quantity: v } }))
+    ok(getUpdateErr({ id, item: { ...item, quantity: v } }))
   })
-  ok(getEditErr({ id, item: { ...item, quantity: 0.9 } }))
-  ok(getEditErr({ id, item: { ...item, quantity: -9 } }))
+  ok(getUpdateErr({ id, item: { ...item, quantity: 0.9 } }))
+  ok(getUpdateErr({ id, item: { ...item, quantity: -9 } }))
 })
 
-editErr('is not empty if item isVisible is wrong', () => {
-  _.optional(_.wrongValuesForBoolean).forEach(v => {
-    ok(getEditErr({ id, item: { ...item, isVisible: v } }))
-  })
-})
-
-editErr.run()
+updateErr.run()

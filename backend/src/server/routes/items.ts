@@ -3,35 +3,39 @@ import { createRoute } from '../../helpers/server'
 import * as m from '../../db/api/items'
 import * as v from '../../helpers/validators/items'
 
-const router = new Router({ prefix: '/items' })
+const prefix = 'item'
+export const item = new Router({ prefix: `/${prefix}` })
+export const items = new Router({ prefix: `/${prefix}s` })
 
-router.get('/', createRoute({
-  method: m.getVisible
+item.get('/:id', createRoute({
+  method: m.get,
+  validator: v.getGetErr,
+  useParams: true
 }))
 
-router.get('/all', createRoute({
-  method: m.get,
+item.patch('/:id', createRoute({
+  method: m.update,
+  validator: v.getUpdateErr,
+  ok: 202,
+  useParams: true,
   secure: true
 }))
 
-router.post('/add', createRoute({
+item.delete('/:id', createRoute({
+  method: m.deleteItem,
+  validator: v.getDeleteErr,
+  useParams: true,
+  secure: true
+}))
+
+items.get('/', createRoute({
+  method: m.getAll,
+  secure: true
+}))
+
+items.post('/add', createRoute({
   method: m.add,
   validator: v.getAddErr,
   ok: 201,
   secure: true
 }))
-
-router.patch('/', createRoute({
-  method: m.edit,
-  validator: v.getEditErr,
-  ok: 202,
-  secure: true
-}))
-
-router.post('/delete', createRoute({
-  method: m.deleteItem,
-  validator: v.getDeleteErr,
-  secure: true
-}))
-
-export default router

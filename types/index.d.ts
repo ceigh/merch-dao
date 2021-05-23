@@ -10,5 +10,8 @@ export interface Item {
   images: string[]
   // natural number, -1 for unlimited
   quantity: number
-  isVisible: boolean
+}
+
+export interface Options {
+  currentItem: Item['id']
 }

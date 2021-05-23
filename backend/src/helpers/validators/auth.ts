@@ -1,8 +1,8 @@
 import * as v from '.'
-import { getAddErr as getAddAdminErr } from './admin'
+import { getCreateErr as getAdminCreateErr } from './admin'
 import type { Data } from '../server'
 
-export const getSignInErr = getAddAdminErr
+export const getSignInErr = getAdminCreateErr
 
 export function getSignOutErr (data: Data): string {
   const { allTokens } = data

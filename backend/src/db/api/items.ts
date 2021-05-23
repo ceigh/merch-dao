@@ -35,7 +35,7 @@ export async function get (input: items.Get.I): Promise<items.Get.O> {
   return data
 }
 
-export async function add (input: items.Add.I, secret: string): Promise<void> {
+export async function create (input: items.Create.I, secret: string): Promise<void> {
   const newItem: Item = {
     ...input,
     id: nanoid(itemIdLen)

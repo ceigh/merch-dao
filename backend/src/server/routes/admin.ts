@@ -3,16 +3,16 @@ import { createRoute } from '../../helpers/server'
 import * as m from '../../db/api/admin'
 import * as v from '../../helpers/validators/admin'
 
-const router = new Router({ prefix: '/admin' })
+const router = new Router({ prefix: '/admins' })
 
-router.post('/add', createRoute({
-  method: m.add,
-  validator: v.getAddErr,
+router.post('/create', createRoute({
+  method: m.create,
+  validator: v.getCreateErr,
   ok: 201,
   secure: true
 }))
 
-router.get('/all', createRoute({
+router.get('/', createRoute({
   method: m.getAll,
   secure: true
 }))

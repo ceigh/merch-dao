@@ -33,9 +33,9 @@ items.get('/', createRoute({
   secure: true
 }))
 
-items.post('/add', createRoute({
-  method: m.add,
-  validator: v.getAddErr,
+items.post('/create', createRoute({
+  method: m.create,
+  validator: v.getCreateErr,
   ok: 201,
   secure: true
 }))

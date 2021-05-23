@@ -10,9 +10,10 @@ router.get('/', createRoute({
   secure: true
 }))
 
-router.post('/delete', createRoute({
+router.delete('/:username', createRoute({
   method: m.deleteUser,
   validator: v.getDeleteErr,
+  useParams: true,
   secure: true
 }))
 

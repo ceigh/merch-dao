@@ -8,15 +8,15 @@ export namespace GetAll {
   }
 }
 
+export namespace Create {
+  export interface I extends ItemWithoutId {}
+}
+
 export namespace Get {
   export interface I {
     id: Item['id']
   }
   export interface O extends Item {}
-}
-
-export namespace Add {
-  export interface I extends ItemWithoutId {}
 }
 
 export namespace Update {

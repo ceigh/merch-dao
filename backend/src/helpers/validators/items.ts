@@ -59,7 +59,7 @@ export function getIdErr (value: unknown, key = 'id'): string {
   return ''
 }
 
-export function getAddErr (data: Data): string {
+export function getCreateErr (data: Data): string {
   const itemWithoutIdErr = getItemWithoutIdErr('', data)
   if (itemWithoutIdErr !== '') return itemWithoutIdErr
 

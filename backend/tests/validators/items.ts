@@ -2,7 +2,7 @@ import { suite } from 'uvu'
 import { equal, ok } from 'uvu/assert'
 import { itemIdLen } from '../../../helpers/const'
 import {
-  getItemWithoutIdErr, getIdErr, getAddErr, getUpdateErr, getDeleteErr,
+  getItemWithoutIdErr, getIdErr, getCreateErr, getUpdateErr, getDeleteErr,
   getGetErr
 } from '../../src/helpers/validators/items'
 import * as _ from '..'
@@ -102,43 +102,43 @@ getErr('is not empty if id is wrong', () => {
 
 getErr.run()
 
-const addErr = suite('getAddErr')
+const createErr = suite('getCreateErr')
 
-addErr('is empty if item ok', () => {
-  equal(getAddErr(item), '')
+createErr('is empty if item ok', () => {
+  equal(getCreateErr(item), '')
 })
 
-addErr('is not empty if item name wrong', () => {
+createErr('is not empty if item name wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ ...item, name: v }))
+    ok(getCreateErr({ ...item, name: v }))
   })
 })
 
-addErr('is not empty if item description wrong', () => {
+createErr('is not empty if item description wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ ...item, description: v }))
+    ok(getCreateErr({ ...item, description: v }))
   })
 })
 
-addErr('is not empty if item images wrong', () => {
+createErr('is not empty if item images wrong', () => {
   _.wrongValuesForArray.forEach(v => {
-    ok(getAddErr({ ...item, images: v }))
+    ok(getCreateErr({ ...item, images: v }))
   })
 
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ ...item, images: [v] }))
+    ok(getCreateErr({ ...item, images: [v] }))
   })
 })
 
-addErr('is not empty if item quantity is wrong', () => {
+createErr('is not empty if item quantity is wrong', () => {
   _.wrongValuesForNumber.forEach(v => {
-    ok(getAddErr({ ...item, quantity: v }))
+    ok(getCreateErr({ ...item, quantity: v }))
   })
-  ok(getAddErr({ ...item, quantity: 0.9 }))
-  ok(getAddErr({ ...item, quantity: -9 }))
+  ok(getCreateErr({ ...item, quantity: 0.9 }))
+  ok(getCreateErr({ ...item, quantity: -9 }))
 })
 
-addErr.run()
+createErr.run()
 
 const updateErr = suite('getUpdateErr')
 

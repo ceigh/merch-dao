@@ -1,24 +1,24 @@
 import { suite } from 'uvu'
 import { equal, ok } from 'uvu/assert'
-import { getAddErr } from '../../src/helpers/validators/admin'
+import { getCreateErr } from '../../src/helpers/validators/admin'
 import * as _ from '..'
 
-const addErr = suite('getAddErr')
+const createErr = suite('getCreateErr')
 
-addErr('is empty if creds ok', () => {
-  equal(getAddErr({ password: _.password, username: _.username }), '')
+createErr('is empty if creds ok', () => {
+  equal(getCreateErr({ password: _.password, username: _.username }), '')
 })
 
-addErr('is not empty if username wrong', () => {
+createErr('is not empty if username wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ password: _.password, username: v }))
+    ok(getCreateErr({ password: _.password, username: v }))
   })
 })
 
-addErr('is not empty if password wrong', () => {
+createErr('is not empty if password wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getAddErr({ username: _.username, password: v }))
+    ok(getCreateErr({ username: _.username, password: v }))
   })
 })
 
-addErr.run()
+createErr.run()

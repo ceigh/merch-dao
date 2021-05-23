@@ -1,5 +1,5 @@
 import { createClient, q } from '../..'
-import { add as addAdmin } from '../../api/admin'
+import { create as createAdmin } from '../../api/admin'
 import { create as createOptions } from '../../api/options'
 import type { values } from 'faunadb/src/types/values'
 
@@ -28,9 +28,8 @@ export default async function (key: string): Promise<Collections> {
     return [c.name, ref]
   }))
 
-  // add defaults
   await createOptions({ scope: 'default', currentItem: '' }, key)
-  await addAdmin({ username: 'admin', password: 'admin' }, key)
+  await createAdmin({ username: 'admin', password: 'admin' }, key)
 
   return Object.fromEntries(entries)
 }

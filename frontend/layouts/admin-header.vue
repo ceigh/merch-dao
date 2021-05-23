@@ -19,7 +19,7 @@
           </b-nav-item>
 
           <b-nav-item to="/admin/admins" exact-active-class="active">
-            Administrators
+            Admins
           </b-nav-item>
         </b-navbar-nav>
 
@@ -31,9 +31,6 @@
             </template>
 
             <b-dropdown-group v-if="loggedIn">
-              <b-dropdown-item-button v-b-modal.create-admin-modal>
-                Create administrator
-              </b-dropdown-item-button>
               <b-dropdown-item-button v-b-modal.update-password-modal>
                 Change password
               </b-dropdown-item-button>
@@ -56,43 +53,6 @@
     </b-container>
 
     <!-- modals -->
-    <b-modal
-      id="create-admin-modal"
-      title="New administrator"
-      hide-footer
-    >
-      <b-form @submit.prevent="createAdmin">
-        <b-form-group
-          label="Username"
-          label-for="create-admin-username"
-        >
-          <b-form-input
-            id="create-admin-username"
-            v-model="createAdminData.username"
-            placeholder="admin"
-            autofocus
-            required
-          />
-        </b-form-group>
-
-        <b-form-group
-          label="Password"
-          label-for="create-admin-password"
-        >
-          <b-form-input
-            id="create-admin-password"
-            v-model="createAdminData.password"
-            placeholder="password"
-            required
-          />
-        </b-form-group>
-
-        <b-button type="submit" variant="success">
-          Create
-        </b-button>
-      </b-form>
-    </b-modal>
-
     <b-modal
       id="update-password-modal"
       title="Password change"
@@ -150,16 +110,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import type { Create as CreateAdmin } from '../../types/api/admin'
 import type { UpdatePassword } from '../../types/api/auth'
 
 export default Vue.extend({
   data () {
     return {
-      createAdminData: {
-        username: '',
-        password: ''
-      } as CreateAdmin.I,
       updatePasswordData: {
         oldPassword: '',
         newPassword: '',
@@ -179,20 +134,6 @@ export default Vue.extend({
   },
 
   methods: {
-    async createAdmin (): Promise<void> {
-      try {
-        await this.$accessor.admin.create(this.createAdminData)
-
-        this.$bvModal.hide('create-admin-modal')
-        this.$toast('Administrator created', 'Success', 'success')
-
-        this.createAdminData.username = ''
-        this.createAdminData.password = ''
-      } catch (e) {
-        this.$toast(e.response?.data)
-      }
-    },
-
     async updatePassword (): Promise<void> {
       const { updatePasswordData } = this
 

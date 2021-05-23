@@ -1,5 +1,6 @@
 import { createClient, q } from '../..'
 import { add as addAdmin } from '../../api/admin'
+import { create as createOptions } from '../../api/options'
 import type { values } from 'faunadb/src/types/values'
 
 type Ref = values.Ref
@@ -7,6 +8,7 @@ export type Collections = Record<string, Ref>
 
 const { CreateCollection } = q
 
+export const optionsCollection = 'options'
 export const usersCollection = 'users'
 export const itemsCollection = 'items'
 export const ordersCollection = 'orders'
@@ -14,6 +16,7 @@ export const ordersCollection = 'orders'
 export default async function (key: string): Promise<Collections> {
   const client = createClient(key)
   const collections = [
+    { name: optionsCollection },
     { name: usersCollection },
     { name: itemsCollection },
     { name: ordersCollection }
@@ -25,7 +28,8 @@ export default async function (key: string): Promise<Collections> {
     return [c.name, ref]
   }))
 
-  // add default admin
+  // add defaults
+  await createOptions({ scope: 'default', currentItem: '' }, key)
   await addAdmin({ username: 'admin', password: 'admin' }, key)
 
   return Object.fromEntries(entries)

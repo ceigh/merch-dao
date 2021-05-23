@@ -1,8 +1,10 @@
 import { createClient, q } from '../..'
 import {
-  usersCollection, itemsCollection, ordersCollection
+  optionsCollection, usersCollection, itemsCollection, ordersCollection
 } from './collections'
-import { itemByIdIndex, userByUsernameIndex, orderByIdIndex } from './indexes'
+import {
+  optionsByScopeIndex, itemByIdIndex, userByUsernameIndex, orderByIdIndex
+} from './indexes'
 
 const { Collection, Index, CreateRole, Query, Select, Get } = q
 
@@ -17,6 +19,15 @@ export default async function (key: string): Promise<void> {
     }],
 
     privileges: [
+      {
+        resource: Collection(optionsCollection),
+        actions: {
+          create: true,
+          delete: true,
+          read: true,
+          write: true
+        }
+      },
       {
         resource: Collection(usersCollection),
         actions: {
@@ -45,6 +56,12 @@ export default async function (key: string): Promise<void> {
         }
       },
 
+      {
+        resource: Index(optionsByScopeIndex),
+        actions: {
+          unrestricted_read: true
+        }
+      },
       {
         resource: Index(itemByIdIndex),
         actions: {

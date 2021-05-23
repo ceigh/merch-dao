@@ -23,7 +23,7 @@ async function revertChanges (err: Error): Promise<never> {
       await client.query(Delete(dbRef))
     } catch (e) { console.error(e.message) }
   }
-  throw new Error(err.message)
+  throw err
 }
 
 async function createDb (): Promise<void> {

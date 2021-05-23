@@ -13,5 +13,6 @@ export interface Item {
 }
 
 export interface Options {
+  scope: string
   currentItem: Item['id']
 }

@@ -6,7 +6,7 @@ export function getItemWithoutIdErr (key: string, value: Data,
   partial = false): string {
   const k = key !== '' ? `${key}.` : ''
 
-  const objectErr = v.getObjectErr(k, value)
+  const objectErr = v.getObjectErr(k.slice(0, -1), value)
   if (objectErr !== '') return objectErr
 
   const { name, description, images, quantity } = value

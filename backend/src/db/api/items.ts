@@ -16,7 +16,7 @@ const {
   Select
 } = q
 
-const itemRefById = (id: string): ReturnType<typeof getRefByIndex> =>
+export const itemRefById = (id: string): ReturnType<typeof getRefByIndex> =>
   getRefByIndex(itemByIdIndex, id)
 
 export async function getAll (_input: {}, secret?: string):

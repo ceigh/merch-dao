@@ -239,10 +239,13 @@ export default Vue.extend({
     },
 
     async editItem (): Promise<void> {
+      const { candidate } = this
+      if (!candidate.images.some(Boolean)) { candidate.images = [] }
+
       try {
         await this.$accessor.items.update({
           id: this.editionCandidateId,
-          item: this.candidate
+          item: candidate
         })
         this.$bvModal.hide('modal')
         this.$toast('item edited', 'Success', 'success')

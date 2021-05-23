@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-list-group>
-      <b-list-group-item button @click="showCreateModal">
+      <b-list-group-item button class="text-center" @click="showCreateModal">
         Create new item
       </b-list-group-item>
 
@@ -11,7 +11,12 @@
         class="d-flex flex-column align-items-start"
       >
         <div class="d-flex w-100 justify-content-between">
-          <h5>{{ item.name }}</h5>
+          <h5>
+            {{ item.name }}
+            <small v-if="currentItemId === item.id" class="text-muted">
+              (current)
+            </small>
+          </h5>
           <small>{{ getFormattedQuantity(item.quantity) }}</small>
         </div>
 
@@ -27,19 +32,19 @@
             </b-button>
 
             <b-button
-              variant="danger"
-              @click="showDeleteModal(item)"
+              :disabled="currentItemId === item.id"
+              variant="success"
+              @click="makeItemCurrent(item.id)"
             >
-              Delete
+              Make current
             </b-button>
           </div>
 
           <b-button
-            variant="success"
-            :disabled="currentItemId === item.id"
-            @click="makeItemCurrent(item.id)"
+            variant="danger"
+            @click="showDeleteModal(item)"
           >
-            {{ currentItemId === item.id ? 'Current' : 'Make current' }}
+            Delete
           </b-button>
         </div>
       </b-list-group-item>
@@ -102,14 +107,6 @@
           />
           {{ candidateFormattedQuantity }}
         </b-form-group>
-
-        <!--
-        <b-form-group>
-          <b-form-checkbox v-model="candidate.isVisible">
-            Set item as visible on homepage
-          </b-form-checkbox>
-        </b-form-group>
-          -->
 
         <b-button type="submit" variant="success">
           {{ modalSubmitText }}
@@ -190,7 +187,7 @@ export default Vue.extend({
 
   methods: {
     getFormattedQuantity (quantity: number): string {
-      return quantity === -1 ? 'Unlimited' : String(quantity)
+      return quantity === -1 ? 'Unlimited' : `${quantity} pieces left`
     },
 
     showCreateModal (): void {

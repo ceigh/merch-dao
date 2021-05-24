@@ -1,6 +1,7 @@
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import cors from '@koa/cors'
+import logger from 'koa-logger'
 
 import { getFromEnv } from '../../../helpers/env'
 
@@ -16,6 +17,7 @@ const isDev = process.env.NODE_ENV === 'development'
 const app = new Koa()
 
 // middlewares
+if (isDev) app.use(logger())
 app.use(cors())
 app.use(bodyParser({
   onerror (err, ctx) { ctx.throw(400, err.message) }

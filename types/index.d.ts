@@ -1,3 +1,5 @@
+import { orderStatuses} from '../helpers/const'
+
 export interface User {
   username: string
   isAdmin: boolean
@@ -14,7 +16,7 @@ export interface Item {
 
 export interface Order {
   id: string
-  status: number
+  status: keyof typeof orderStatuses
   item: Item['id']
   quantity: number
   recipient: {

@@ -18,7 +18,7 @@ export function getOrderWithoutIdErr (key: string, value: Data,
   }
 
   if (checkStatus && (!partial || (partial && status !== undefined))) {
-    const statuses = Object.keys(orderStatuses).map(k => Number(k))
+    const statuses = Object.keys(orderStatuses)
     if (!statuses.includes(status)) {
       return `${k}status must be in [${statuses.join(', ')}]`
     }

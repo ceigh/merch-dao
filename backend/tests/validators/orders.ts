@@ -30,10 +30,10 @@ orderWithoutIdErr('is not empty if item wrong', () => {
 })
 
 orderWithoutIdErr('is not empty if status wrong', () => {
-  _.wrongValuesForNumber.forEach(v => {
+  _.wrongValuesForNonBlankString.forEach(v => {
     ok(getOrderWithoutIdErr('', { ...order, status: v }, false, true))
   })
-  ok(getOrderWithoutIdErr('', { ...order, status: 99 }, false, true))
+  ok(getOrderWithoutIdErr('', { ...order, status: '99' }, false, true))
 })
 
 orderWithoutIdErr('is not empty if quantity is wrong', () => {
@@ -145,10 +145,10 @@ updateErr('is not empty if order quantity is wrong', () => {
 })
 
 updateErr('is not empty if order status wrong', () => {
-  _.optional(_.wrongValuesForNumber).forEach(v => {
+  _.optional(_.wrongValuesForNonBlankString).forEach(v => {
     ok(getUpdateErr({ id, order: { ...order, status: v } }))
   })
-  ok(getUpdateErr({ id, order: { ...order, status: 99 } }))
+  ok(getUpdateErr({ id, order: { ...order, status: '99' } }))
 })
 
 updateErr.run()

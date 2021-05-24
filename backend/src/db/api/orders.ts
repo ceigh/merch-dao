@@ -47,7 +47,7 @@ Promise<orders.Create.O> {
   const newOrder: Order = {
     ...input,
     id,
-    status: 0
+    status: '0'
   }
   await client.query(Create(Collection(ordersCollection), { data: newOrder }),
     { secret })

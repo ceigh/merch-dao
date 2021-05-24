@@ -23,7 +23,7 @@ ${len} chars length, not ${valLen}`
 const mustBe = (expectedType: string, key: string,
   realType = ''): string =>
     `${key} must be "${expectedType}"${
-    realType !== '' ? `, not "${realType}"` : ''}"`
+    realType !== '' ? `, not "${realType}"` : ''}`
 
 export const blank = (key: string): string => `${key} cannot be blank`
 

@@ -5,15 +5,12 @@ export namespace Create {
 }
 
 export namespace Get {
-  export interface I {
-    scope: Options['scope']
-  }
+  export interface I extends Pick<Options, 'scope'> {}
   export interface O extends Options {}
 }
 
 export namespace Update {
-  export interface I {
-    scope: Options['scope']
+  export interface I extends Pick<Options, 'scope'> {
     options: Partial<Omit<Options, 'scope'>>
   }
 }

@@ -13,21 +13,16 @@ export namespace Create {
 }
 
 export namespace Get {
-  export interface I {
-    id: Item['id']
-  }
+  export interface I extends Pick<Item, 'id'> {}
   export interface O extends Item {}
 }
 
 export namespace Update {
-  export interface I {
-    id: Item['id']
+  export interface I extends Pick<Item, 'id'> {
     item: Partial<ItemWithoutId>
   }
 }
 
 export namespace Delete {
-  export interface I {
-    id: Item['id']
-  }
+  export interface I extends Pick<Item, 'id'> {}
 }

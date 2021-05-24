@@ -9,6 +9,7 @@ import auth from './routes/auth'
 import user from './routes/user'
 import admin from './routes/admin'
 import { item, items } from './routes/items'
+import { order, orders } from './routes/orders'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -27,6 +28,8 @@ app.use(user.routes())
 app.use(admin.routes())
 app.use(item.routes())
 app.use(items.routes())
+app.use(order.routes())
+app.use(orders.routes())
 
 // listen
 let host: string

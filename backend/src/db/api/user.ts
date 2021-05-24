@@ -14,7 +14,7 @@ const {
   Map
 } = q
 
-const userRefByUsername = (username: string): ReturnType<typeof getRefByIndex> =>
+const userRefByUsername = (username: User['username']): ReturnType<typeof getRefByIndex> =>
   getRefByIndex(userByUsernameIndex, username)
 
 export async function getUser (_input: {}, secret: string):

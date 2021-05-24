@@ -16,10 +16,10 @@ const {
   Select
 } = q
 
-export const itemRefById = (id: string): ReturnType<typeof getRefByIndex> =>
+export const itemRefById = (id: Item['id']): ReturnType<typeof getRefByIndex> =>
   getRefByIndex(itemByIdIndex, id)
 
-export async function getAll (_input: {}, secret?: string):
+export async function getAll (_input: {}, secret: string):
 Promise<items.GetAll.O> {
   // pagination can be added in the future
   const { data: items }: values.Page<Item> =

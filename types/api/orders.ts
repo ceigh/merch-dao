@@ -16,8 +16,8 @@ export namespace Get {
   export interface O extends Order {}
 }
 
-export namespace Update {
+export namespace UpdateStatus {
   export interface I extends Pick<Order, 'id'> {
-    order: Partial<Omit<Order, 'id'>>
+    status: Order['status']
   }
 }

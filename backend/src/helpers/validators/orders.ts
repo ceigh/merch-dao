@@ -3,25 +3,28 @@ import { getIdErr as getItemIdErr } from './items'
 import { orderIdLen, orderStatuses } from '../../../../helpers/const'
 import type { Data } from '../server'
 
+const statuses = Object.keys(orderStatuses)
+
+export function getStatusErr (value: Data, key = 'status'): string {
+  if (!statuses.includes(value)) {
+    return `${key} must be in [${statuses.join(', ')}]`
+  }
+
+  return ''
+}
+
 export function getOrderWithoutIdErr (key: string, value: Data,
-  partial = false, checkStatus = false): string {
+  partial = false): string {
   const k = key !== '' ? `${key}.` : ''
 
   const objectErr = v.getObjectErr(k.slice(0, -1), value)
   if (objectErr !== '') return objectErr
 
-  const { item, status, quantity } = value
+  const { item, quantity } = value
 
   if (!partial || (partial && item !== undefined)) {
     const itemIdErr = getItemIdErr(item, `${k}item`)
     if (itemIdErr !== '') return itemIdErr
-  }
-
-  if (checkStatus && (!partial || (partial && status !== undefined))) {
-    const statuses = Object.keys(orderStatuses)
-    if (!statuses.includes(status)) {
-      return `${k}status must be in [${statuses.join(', ')}]`
-    }
   }
 
   if (!partial || (partial && quantity !== undefined)) {
@@ -55,13 +58,12 @@ export function getCreateErr (data: Data): string {
   return ''
 }
 
-export function getUpdateErr (data: Data): string {
+export function getUpdateStatusErr (data: Data): string {
   const idErr = getIdErr(data.id)
   if (idErr !== '') return idErr
 
-  const orderWithoutIdErr =
-    getOrderWithoutIdErr('order', data.order, true, true)
-  if (orderWithoutIdErr !== '') return orderWithoutIdErr
+  const statusErr = getStatusErr(data.status)
+  if (statusErr !== '') return statusErr
 
   return ''
 }

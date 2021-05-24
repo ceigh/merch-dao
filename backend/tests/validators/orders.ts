@@ -2,7 +2,7 @@ import { suite } from 'uvu'
 import { equal, ok } from 'uvu/assert'
 import { itemIdLen, orderIdLen } from '../../../helpers/const'
 import {
-  getOrderWithoutIdErr, getIdErr, getCreateErr, getUpdateErr, getGetErr
+  getOrderWithoutIdErr, getIdErr, getCreateErr, getUpdateStatusErr, getGetErr
 } from '../../src/helpers/validators/orders'
 import * as _ from '..'
 import type { Order } from '../../../types'
@@ -14,6 +14,7 @@ const order: Omit<Order, 'id' | 'status'> = {
   // TODO: add recipient and address
 }
 const id = 'a'.repeat(orderIdLen)
+const status = '0'
 
 const orderWithoutIdErr = suite('getOrderWithoutIdErr')
 
@@ -27,13 +28,6 @@ orderWithoutIdErr('is not empty if item wrong', () => {
   })
   ok(getOrderWithoutIdErr('', { ...order, item: 'a'.repeat(itemIdLen - 1) }))
   ok(getOrderWithoutIdErr('', { ...order, item: 'a'.repeat(itemIdLen + 1) }))
-})
-
-orderWithoutIdErr('is not empty if status wrong', () => {
-  _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getOrderWithoutIdErr('', { ...order, status: v }, false, true))
-  })
-  ok(getOrderWithoutIdErr('', { ...order, status: '99' }, false, true))
 })
 
 orderWithoutIdErr('is not empty if quantity is wrong', () => {
@@ -106,49 +100,25 @@ createErr('is not empty if item quantity is wrong', () => {
 
 createErr.run()
 
-const updateErr = suite('getUpdateErr')
+const updateStatusErr = suite('getUpdateStatusErr')
 
-updateErr('is empty if payload ok', () => {
-  equal(getUpdateErr({ order, id }), '')
-  equal(getUpdateErr({ order: {}, id }), '')
+updateStatusErr('is empty if payload ok', () => {
+  equal(getUpdateStatusErr({ status, id }), '')
 })
 
-updateErr('is not empty if id is wrong', () => {
+updateStatusErr('is not empty if id is wrong', () => {
   _.wrongValuesForNonBlankString.forEach(v => {
-    ok(getUpdateErr({ order, id: v }))
+    ok(getUpdateStatusErr({ status, id: v }))
   })
-  ok(getUpdateErr({ order, id: 'a'.repeat(orderIdLen - 1) }))
-  ok(getUpdateErr({ order, id: 'a'.repeat(orderIdLen + 1) }))
+  ok(getUpdateStatusErr({ status, id: 'a'.repeat(orderIdLen - 1) }))
+  ok(getUpdateStatusErr({ status, id: 'a'.repeat(orderIdLen + 1) }))
 })
 
-updateErr('is not empty if order wrong', () => {
-  _.wrongValuesForObject.forEach(v => {
-    ok(getUpdateErr({ id, order: v }))
+updateStatusErr('is not empty if status wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getUpdateStatusErr({ id, status: v }))
   })
+  ok(getUpdateStatusErr({ id, status: '99' }))
 })
 
-updateErr('is not empty if order item wrong', () => {
-  _.optional(_.wrongValuesForNonBlankString).forEach(v => {
-    ok(getUpdateErr({ id, order: { ...order, item: v } }))
-  })
-  ok(getUpdateErr({ id, order: { ...order, item: 'a'.repeat(itemIdLen - 1) } }))
-  ok(getUpdateErr({ id, order: { ...order, item: 'a'.repeat(itemIdLen + 1) } }))
-})
-
-updateErr('is not empty if order quantity is wrong', () => {
-  _.optional(_.wrongValuesForNumber).forEach(v => {
-    ok(getUpdateErr({ id, order: { ...order, quantity: v } }))
-  })
-  ok(getUpdateErr({ id, order: { ...order, quantity: 0.9 } }))
-  ok(getUpdateErr({ id, order: { ...order, quantity: -9 } }))
-  ok(getUpdateErr({ id, order: { ...order, quantity: -1 } }))
-})
-
-updateErr('is not empty if order status wrong', () => {
-  _.optional(_.wrongValuesForNonBlankString).forEach(v => {
-    ok(getUpdateErr({ id, order: { ...order, status: v } }))
-  })
-  ok(getUpdateErr({ id, order: { ...order, status: '99' } }))
-})
-
-updateErr.run()
+updateStatusErr.run()

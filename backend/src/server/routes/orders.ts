@@ -13,9 +13,9 @@ order.get('/:id', createRoute({
   useParams: true
 }))
 
-order.patch('/:id', createRoute({
-  method: m.update,
-  validator: v.getUpdateErr,
+order.patch('/:id/status', createRoute({
+  method: m.updateStatus,
+  validator: v.getUpdateStatusErr,
   ok: 202,
   useParams: true,
   secure: true

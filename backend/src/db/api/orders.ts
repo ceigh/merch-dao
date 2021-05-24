@@ -87,10 +87,12 @@ Promise<orders.Create.O> {
   return { id }
 }
 
-export async function update (input: orders.Update.I, secret: string):
-Promise<void> {
-  await client.query(Update(orderRefById(input.id), { data: input.order }),
-    { secret })
+export async function updateStatus (input: orders.UpdateStatus.I,
+  secret: string): Promise<void> {
+  await client.query(Update(orderRefById(input.id), {
+    data: { status: input.status }
+  }),
+  { secret })
 }
 
 /*

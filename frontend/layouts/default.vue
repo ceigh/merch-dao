@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-container class="py-5">
     <nuxt />
-  </div>
+  </b-container>
 </template>

@@ -26,7 +26,7 @@ Promise<orders.GetAll.O> {
   // pagination can be added in the future
   const { data: orders }: values.Page<Order> =
     await client.query(Map(
-      Paginate(Documents(Collection(ordersCollection))),
+      Paginate(Documents(Collection(ordersCollection)), { size: 100_000 }),
       Lambda(i => Select(['data'], Get(i)))
     ), { secret })
   return { orders }

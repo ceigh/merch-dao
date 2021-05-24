@@ -44,7 +44,7 @@ export async function create (input: items.Create.I, secret: string): Promise<vo
     { secret })
 }
 
-export async function update (input: items.Update.I, secret: string):
+export async function update (input: items.Update.I, secret?: string):
 Promise<void> {
   await client.query(Update(itemRefById(input.id), { data: input.item }),
     { secret })

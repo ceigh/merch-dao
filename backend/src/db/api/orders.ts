@@ -5,7 +5,7 @@ import { orderByIdIndex } from '../jobs/create-db/indexes'
 import { getRefByIndex } from '../../helpers/db'
 import { InternalError } from '../../helpers/server'
 import { orderIdLen } from '../../../../helpers/const'
-import { itemRefById, get as getItem } from './items'
+import { itemRefById, get as getItem, update as updateItem } from './items'
 
 import type { values } from 'faunadb/src/types/values'
 import type * as orders from '../../../../types/api/orders'
@@ -37,27 +37,33 @@ export async function get (input: orders.Get.I): Promise<orders.Get.O> {
   return data
 }
 
-export async function create (input: orders.Create.I, secret: string):
+export async function create (input: orders.Create.I):
 Promise<orders.Create.O> {
   const { item: itemId, quantity } = input
 
   // check for item id
-  if (itemId !== undefined) {
-    await client.query(Get(itemRefById(itemId)))
-  }
+  await client.query(Get(itemRefById(itemId)))
 
   // check that quantity <= real quantity
-  if (quantity !== undefined) {
-    let itemQuantity: Item['quantity']
-    try {
-      const item = await getItem({ id: itemId })
-      itemQuantity = item.quantity
-    } catch (e) { throw new InternalError(e) }
-    if (itemQuantity !== -1 && itemQuantity < quantity) {
+  let itemQuantity: Item['quantity']
+  try {
+    const item = await getItem({ id: itemId })
+    itemQuantity = item.quantity
+  } catch (e) { throw new InternalError(e) }
+  if (itemQuantity !== -1) {
+    if (itemQuantity === 0) { throw new Error('no more pieces left') }
+    if (itemQuantity < quantity) {
       throw new Error(`quantity must be less or equal ${
-        itemQuantity}, not ${quantity}`)
+      itemQuantity}, not ${quantity}`)
     }
   }
+
+  // update item quantity
+  try {
+    await updateItem({
+      id: itemId, item: { quantity: itemQuantity - quantity }
+    })
+  } catch (e) { throw new InternalError(e) }
 
   const id = nanoid(orderIdLen)
   const newOrder: Order = {
@@ -65,8 +71,19 @@ Promise<orders.Create.O> {
     id,
     status: '0'
   }
-  await client.query(Create(Collection(ordersCollection), { data: newOrder }),
-    { secret })
+
+  try {
+    await client.query(Create(Collection(ordersCollection), { data: newOrder }))
+  } catch (e) {
+    // revert item quantity if creation failed
+    try {
+      await updateItem({
+        id: itemId, item: { quantity: itemQuantity }
+      })
+    } catch (e) { throw new InternalError(e) }
+    throw new InternalError(e)
+  }
+
   return { id }
 }
 

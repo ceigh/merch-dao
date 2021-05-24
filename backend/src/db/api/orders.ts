@@ -3,12 +3,13 @@ import { createClient, q } from '..'
 import { ordersCollection } from '../jobs/create-db/collections'
 import { orderByIdIndex } from '../jobs/create-db/indexes'
 import { getRefByIndex } from '../../helpers/db'
+import { InternalError } from '../../helpers/server'
 import { orderIdLen } from '../../../../helpers/const'
-import { itemRefById } from './items'
+import { itemRefById, get as getItem } from './items'
 
 import type { values } from 'faunadb/src/types/values'
 import type * as orders from '../../../../types/api/orders'
-import type { Order } from '../../../../types'
+import type { Order, Item } from '../../../../types'
 import type { OrderDoc } from '../../../types'
 
 const client = createClient()
@@ -38,9 +39,24 @@ export async function get (input: orders.Get.I): Promise<orders.Get.O> {
 
 export async function create (input: orders.Create.I, secret: string):
 Promise<orders.Create.O> {
-  const { item } = input
-  if (item !== undefined) {
-    await client.query(Get(itemRefById(item)))
+  const { item: itemId, quantity } = input
+
+  // check for item id
+  if (itemId !== undefined) {
+    await client.query(Get(itemRefById(itemId)))
+  }
+
+  // check that quantity <= real quantity
+  if (quantity !== undefined) {
+    let itemQuantity: Item['quantity']
+    try {
+      const item = await getItem({ id: itemId })
+      itemQuantity = item.quantity
+    } catch (e) { throw new InternalError(e) }
+    if (itemQuantity !== -1 && itemQuantity < quantity) {
+      throw new Error(`quantity must be less or equal ${
+        itemQuantity}, not ${quantity}`)
+    }
   }
 
   const id = nanoid(orderIdLen)

@@ -20,7 +20,10 @@
           <small>{{ getFormattedQuantity(item.quantity) }}</small>
         </div>
 
-        <p>{{ item.description }}</p>
+        <div class="d-flex w-100 justify-content-between">
+          <p>{{ item.description }}</p>
+          <small>id: <code>{{ item.id }}</code></small>
+        </div>
 
         <p v-if="item.images.length" class="h-25">
           <b-img-lazy

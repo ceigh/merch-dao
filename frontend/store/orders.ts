@@ -1,6 +1,6 @@
 import { mutationTree, actionTree } from 'typed-vuex'
 import type { Order } from '../../types'
-import type { Update } from '../../types/api/orders'
+import type { UpdateStatus } from '../../types/api/orders'
 
 export const state = () => ({
   all: [] as Order[]
@@ -13,9 +13,9 @@ export const mutations = mutationTree(state, {
 })
 
 export const actions = actionTree({ state, mutations }, {
-  async update (_, data: Update.I): Promise<void> {
-    await this.$axios.patch(`/order/${data.id}`, {
-      item: data.order
+  async updateStatus (_, data: UpdateStatus.I): Promise<void> {
+    await this.$axios.patch(`/order/${data.id}/status`, {
+      status: data.status
     })
     await this.app.$accessor.orders.getAll()
   },

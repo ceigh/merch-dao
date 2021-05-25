@@ -54,7 +54,7 @@
       >
         <b-form-input
           id="quantity"
-          v-model.number="quantity"
+          v-model.number="order.quantity"
           type="range"
           min="1"
           :max="item.quantity"
@@ -87,7 +87,7 @@
           >
             <b-form-input
               id="first-name"
-              v-model.trim="order.recepient.firstName"
+              v-model.trim="order.recipient.name.firstName"
               placeholder="John"
               autofocus
               required
@@ -100,7 +100,7 @@
           >
             <b-form-input
               id="last-name"
-              v-model.trim="order.recepient.lastName"
+              v-model.trim="order.recipient.name.lastName"
               placeholder="Doe"
               required
             />
@@ -113,8 +113,8 @@
         >
           <b-form-input
             id="phone"
-            v-model.trim="order.recepient.phone"
-            placeholder="999-999-9999"
+            v-model.trim="order.recipient.phone"
+            placeholder="+1 999-999-9999"
             required
           />
         </b-form-group>
@@ -125,7 +125,7 @@
         >
           <b-form-input
             id="email"
-            v-model.trim="order.recepient.email"
+            v-model.trim="order.recipient.email"
             placeholder="user@example.com"
             type="email"
           />
@@ -139,6 +139,7 @@
             id="address"
             v-model.trim="order.address"
             placeholder="Address"
+            required
           />
         </b-form-group>
 
@@ -148,26 +149,40 @@
       </b-form>
     </b-modal>
   </div>
+
+  <div v-else-if="step === 3">
+    <h1>
+      Order successfull! Your order id:
+      <code>{{ orderId }}</code>
+    </h1>
+    You can track your order changes
+    <b-link :to="`/order/${orderId}`">
+      here
+    </b-link>
+  </div>
 </template>
 
 <script lang='ts'>
 import Vue from 'vue'
-import type { Item } from '../../types'
+import type { Item, Order } from '../../types'
 
 export default Vue.extend({
   data () {
     return {
       step: 1,
-      quantity: 1,
       order: {
-        recepient: {
-          firstName: '',
-          lastName: '',
+        quantity: 1,
+        recipient: {
+          name: {
+            firstName: '',
+            lastName: ''
+          },
           phone: '',
           email: ''
         },
         address: ''
-      }
+      } as Omit<Order, 'id' | 'status'>,
+      orderId: ''
     }
   },
 
@@ -186,7 +201,25 @@ export default Vue.extend({
       return quantity === -1 ? 'Unlimited' : `${quantity}X`
     },
     quantityFormatted (): string {
-      return `${this.quantity} PCS`
+      return `${this.order.quantity} PCS`
+    }
+  },
+
+  methods: {
+    async createOrder (): Promise<void> {
+      const { order } = this
+      if (!order.recipient.email) { order.recipient.email = undefined }
+
+      try {
+        const { id } = await this.$accessor.orders.create({
+          ...order,
+          item: this.item.id
+        })
+        this.orderId = id
+        this.step = 3
+      } catch (e) {
+        this.$toast(e.response?.data)
+      }
     }
   }
 })

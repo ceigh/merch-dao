@@ -9,23 +9,24 @@
         <div class="d-flex w-100 justify-content-between">
           <h5>
             <code>{{ order.id }}</code>
+
+            <small class="text-muted text-capitalize">
+              ({{ getStatusText(order.status) }})
+            </small>
           </h5>
+
           <small>{{ order.quantity }} pieces</small>
         </div>
 
         <div class="d-flex w-100 justify-content-between">
-          <p>Item id: <code>{{ order.item }}</code></p>
-          <small>
-            Status: {{ getStatusText(order.status) }}
-          </small>
+          <p>Address: {{ order.address }}</p>
+
+          <small>item id: <code>{{ order.item }}</code></small>
         </div>
 
         <p>
-          Recipient: TBA
-        </p>
-
-        <p>
-          Address: TBA
+          Recipient: {{ Object.values(order.recipient.name).join(' ') }}
+          {{ order.recipient.phone }} {{ order.recipient.email }}
         </p>
 
         <div class="d-flex w-100 justify-content-between">

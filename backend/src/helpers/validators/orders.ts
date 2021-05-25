@@ -13,30 +13,55 @@ export function getStatusErr (value: Data, key = 'status'): string {
   return ''
 }
 
-export function getOrderWithoutIdErr (key: string, value: Data,
-  partial = false): string {
+export function getOrderWithoutIdErr (key: string, value: Data): string {
   const k = key !== '' ? `${key}.` : ''
 
   const objectErr = v.getObjectErr(k.slice(0, -1), value)
   if (objectErr !== '') return objectErr
 
-  const { item, quantity } = value
+  const { item, quantity, recipient, address } = value
 
-  if (!partial || (partial && item !== undefined)) {
-    const itemIdErr = getItemIdErr(item, `${k}item`)
-    if (itemIdErr !== '') return itemIdErr
+  const itemIdErr = getItemIdErr(item, `${k}item`)
+  if (itemIdErr !== '') return itemIdErr
+
+  const quantityKey = `${k}quantity`
+  const quantityIntegerErr = v.getIntegerErr(quantityKey, quantity)
+  if (quantityIntegerErr !== '') return quantityIntegerErr
+  if (quantity <= 0) { return `${quantityKey} must be positive` }
+
+  const addressNonBlankStringErr =
+    v.getNonBlankStringErr(address, `${key}address`)
+  if (addressNonBlankStringErr !== '') return addressNonBlankStringErr
+
+  const recipientKey = `${key}recipient`
+  const recipientObjectErr = v.getObjectErr(`${key}recipient`, recipient)
+  if (recipientObjectErr !== '') return recipientObjectErr
+
+  const { name, email, phone } = recipient
+
+  if (email !== undefined) {
+    const emailNonBlankStringErr =
+      v.getNonBlankStringErr(email, `${recipientKey}.email`)
+    if (emailNonBlankStringErr !== '') return emailNonBlankStringErr
   }
 
-  if (!partial || (partial && quantity !== undefined)) {
-    const quantityKey = `${k}quantity`
+  const phoneNonBlankStringErr =
+    v.getNonBlankStringErr(phone, `${recipientKey}.phone`)
+  if (phoneNonBlankStringErr !== '') return phoneNonBlankStringErr
 
-    const integerErr = v.getIntegerErr(quantityKey, quantity)
-    if (integerErr !== '') return integerErr
+  const nameKey = `${recipientKey}.name`
+  const nameObjectErr = v.getObjectErr(nameKey, name)
+  if (nameObjectErr !== '') return nameObjectErr
 
-    if (quantity <= 0) { return `${quantityKey} must be positive` }
-  }
+  const { firstName, lastName } = name
 
-  // TODO: recipient and address checks
+  const firstNameNonBlankStringErr =
+    v.getNonBlankStringErr(firstName, `${nameKey}.firstName`)
+  if (firstNameNonBlankStringErr !== '') return firstNameNonBlankStringErr
+
+  const lastNameNonBlankStringErr =
+    v.getNonBlankStringErr(lastName, `${nameKey}.lastName`)
+  if (lastNameNonBlankStringErr !== '') return lastNameNonBlankStringErr
 
   return ''
 }

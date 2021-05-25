@@ -22,12 +22,14 @@ export interface Order {
   recipient: {
     name: {
       firstName: string
-      patronymic?: string
+      // patronymic?: string
       lastName: string
     }
     email?: string
     phone: string
   }
+  address: string
+  /*
   address: {
     zip: string
     country: string
@@ -37,6 +39,7 @@ export interface Order {
     building: string
     apartment: string
   }
+  */
 }
 
 export interface Options {

@@ -7,11 +7,20 @@ import {
 import * as _ from '..'
 import type { Order } from '../../../types'
 
-// @ts-expect-error
+const name: Order['recipient']['name'] = {
+  firstName: 'a'.repeat(9),
+  lastName: 'a'.repeat(9)
+}
+const recipient: Order['recipient'] = {
+  name,
+  email: 'a'.repeat(9),
+  phone: '9'.repeat(9)
+}
 const order: Omit<Order, 'id' | 'status'> = {
   item: 'a'.repeat(itemIdLen),
-  quantity: 1
-  // TODO: add recipient and address
+  quantity: 1,
+  recipient,
+  address: 'a'.repeat(9)
 }
 const id = 'a'.repeat(orderIdLen)
 const status = '0'
@@ -39,7 +48,65 @@ orderWithoutIdErr('is not empty if quantity is wrong', () => {
   ok(getOrderWithoutIdErr('', { ...order, quantity: -1 }))
 })
 
-// TODO add recipient and address tests
+orderWithoutIdErr('is not empty if address wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getOrderWithoutIdErr('', { ...order, address: v }))
+  })
+})
+
+orderWithoutIdErr('is not empty if recipient wrong', () => {
+  _.wrongValuesForObject.forEach(v => {
+    ok(getOrderWithoutIdErr('', { ...order, recipient: v }))
+  })
+})
+
+orderWithoutIdErr('is not empty if recipient email wrong', () => {
+  _.optional(_.wrongValuesForNonBlankString).forEach(v => {
+    ok(getOrderWithoutIdErr('', {
+      ...order, recipient: { ...recipient, email: v }
+    }))
+  })
+})
+
+orderWithoutIdErr('is not empty if recipient phone wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getOrderWithoutIdErr('', {
+      ...order, recipient: { ...recipient, phone: v }
+    }))
+  })
+})
+
+orderWithoutIdErr('is not empty if recipient name wrong', () => {
+  _.wrongValuesForObject.forEach(v => {
+    ok(getOrderWithoutIdErr('', {
+      ...order, recipient: { ...recipient, name: v }
+    }))
+  })
+})
+
+orderWithoutIdErr('is not empty if recipient name.firstName wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getOrderWithoutIdErr('', {
+      ...order,
+      recipient: {
+        ...recipient,
+        name: { ...name, firstName: v }
+      }
+    }))
+  })
+})
+
+orderWithoutIdErr('is not empty if recipient name.lastName wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getOrderWithoutIdErr('', {
+      ...order,
+      recipient: {
+        ...recipient,
+        name: { ...name, lastName: v }
+      }
+    }))
+  })
+})
 
 orderWithoutIdErr.run()
 
@@ -96,6 +163,66 @@ createErr('is not empty if item quantity is wrong', () => {
   ok(getCreateErr({ ...order, quantity: 0.9 }))
   ok(getCreateErr({ ...order, quantity: -9 }))
   ok(getCreateErr({ ...order, quantity: -1 }))
+})
+
+createErr('is not empty if address wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getCreateErr({ ...order, address: v }))
+  })
+})
+
+createErr('is not empty if recipient wrong', () => {
+  _.wrongValuesForObject.forEach(v => {
+    ok(getCreateErr({ ...order, recipient: v }))
+  })
+})
+
+createErr('is not empty if recipient email wrong', () => {
+  _.optional(_.wrongValuesForNonBlankString).forEach(v => {
+    ok(getCreateErr({
+      ...order, recipient: { ...recipient, email: v }
+    }))
+  })
+})
+
+createErr('is not empty if recipient phone wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getCreateErr({
+      ...order, recipient: { ...recipient, phone: v }
+    }))
+  })
+})
+
+createErr('is not empty if recipient name wrong', () => {
+  _.wrongValuesForObject.forEach(v => {
+    ok(getCreateErr({
+      ...order, recipient: { ...recipient, name: v }
+    }))
+  })
+})
+
+createErr('is not empty if recipient name.firstName wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getCreateErr({
+      ...order,
+      recipient: {
+        ...recipient,
+        name: { ...name, firstName: v }
+      }
+    }))
+  })
+})
+
+createErr('is not empty if recipient name.lastName wrong', () => {
+  _.wrongValuesForNonBlankString.forEach(v => {
+    ok(getCreateErr({
+      ...order,
+      recipient: {
+        ...recipient,
+        name: { ...name, lastName: v }
+      }
+    }))
+  })
 })
 
 createErr.run()

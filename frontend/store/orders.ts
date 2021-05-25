@@ -1,6 +1,6 @@
 import { mutationTree, actionTree } from 'typed-vuex'
 import type { Order } from '../../types'
-import type { Create, UpdateStatus } from '../../types/api/orders'
+import type { Create, Get, UpdateStatus } from '../../types/api/orders'
 
 export const state = () => ({
   all: [] as Order[]
@@ -15,6 +15,11 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree({ state, mutations }, {
   async create (_, data: Create.I): Promise<Create.O> {
     const resp = await this.$axios.post<Create.O>('/orders/create', data)
+    return resp.data
+  },
+
+  async get (_, data: Get.I): Promise<Get.O> {
+    const resp = await this.$axios.get<Get.O>(`/order/${data.id}`)
     return resp.data
   },
 

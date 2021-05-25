@@ -20,7 +20,7 @@ export function parseEnv (): Record<string, any> {
 
     const backendHost = getFromEnv('BACKEND_PROD_HOST')
     const backendPort = getFromEnv('BACKEND_PROD_PORT')
-    apiEndpoint = `https://${backendHost}:${backendPort}`
+    apiEndpoint = `http://${backendHost}:${backendPort}`
   }
 
   return { isDev, host, port, apiEndpoint }
